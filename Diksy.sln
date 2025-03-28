@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.Translation.OpenAI", "Diksy.Translation.OpenAI\Diksy.Translation.OpenAI.csproj", "{370F8BB4-C7D7-4378-B531-E27E00B29E56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.Translation", "Diksy.Translation\Diksy.Translation.csproj", "{872D387E-5B3E-473D-BC16-44915DA9E150}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.WebApi", "Diksy.WebApi\Diksy.WebApi.csproj", "{9957D946-467B-4879-B2AF-36C384AB31F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BF89416C-4B37-4712-8B6B-18016A4CF249}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F6BC499B-DC93-4606-9B50-1FC816FC42BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.Translation.OpenAI.UnitTests", "Diksy.Translation.OpenAI.UnitTests\Diksy.Translation.OpenAI.UnitTests.csproj", "{F28D3B52-BF08-4B66-9B63-CA379F30D507}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{370F8BB4-C7D7-4378-B531-E27E00B29E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{370F8BB4-C7D7-4378-B531-E27E00B29E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{370F8BB4-C7D7-4378-B531-E27E00B29E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{370F8BB4-C7D7-4378-B531-E27E00B29E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{872D387E-5B3E-473D-BC16-44915DA9E150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{872D387E-5B3E-473D-BC16-44915DA9E150}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{872D387E-5B3E-473D-BC16-44915DA9E150}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{872D387E-5B3E-473D-BC16-44915DA9E150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9957D946-467B-4879-B2AF-36C384AB31F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9957D946-467B-4879-B2AF-36C384AB31F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9957D946-467B-4879-B2AF-36C384AB31F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9957D946-467B-4879-B2AF-36C384AB31F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F28D3B52-BF08-4B66-9B63-CA379F30D507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F28D3B52-BF08-4B66-9B63-CA379F30D507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F28D3B52-BF08-4B66-9B63-CA379F30D507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F28D3B52-BF08-4B66-9B63-CA379F30D507}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{370F8BB4-C7D7-4378-B531-E27E00B29E56} = {BF89416C-4B37-4712-8B6B-18016A4CF249}
+		{872D387E-5B3E-473D-BC16-44915DA9E150} = {BF89416C-4B37-4712-8B6B-18016A4CF249}
+		{9957D946-467B-4879-B2AF-36C384AB31F9} = {BF89416C-4B37-4712-8B6B-18016A4CF249}
+		{F28D3B52-BF08-4B66-9B63-CA379F30D507} = {F6BC499B-DC93-4606-9B50-1FC816FC42BF}
+	EndGlobalSection
+EndGlobal
