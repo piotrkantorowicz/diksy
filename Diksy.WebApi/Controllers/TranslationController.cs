@@ -2,6 +2,7 @@ using Diksy.WebApi.Models;
 using Diksy.WebApi.Models.Translation;
 using Diksy.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Diksy.WebApi.Controllers
 {
@@ -10,8 +11,10 @@ namespace Diksy.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting("translation")]
     [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status400BadRequest)]
     [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status429TooManyRequests)]
     public class TranslationController(ITranslationService translationService, ILogger<TranslationController> logger)
         : ControllerBase
     {

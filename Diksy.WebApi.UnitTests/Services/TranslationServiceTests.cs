@@ -1,6 +1,5 @@
 using Diksy.Translation;
 using Diksy.Translation.Exceptions;
-using Diksy.Translation.Models;
 using Diksy.Translation.OpenAI;
 using Diksy.Translation.Services;
 using Diksy.WebApi.Models.Translation;
@@ -16,11 +15,6 @@ namespace Diksy.WebApi.UnitTests.Services
     [TestFixture]
     public class TranslationServiceTests
     {
-        private Mock<ITranslator> _translatorMock;
-        private Mock<ILogger<TranslationService>> _loggerMock;
-        private OpenAiSettings _openAiSettings;
-        private TranslationService _service;
-
         [SetUp]
         public void SetUp()
         {
@@ -34,6 +28,11 @@ namespace Diksy.WebApi.UnitTests.Services
                 openAiSettings: _openAiSettings);
         }
 
+        private Mock<ITranslator> _translatorMock;
+        private Mock<ILogger<TranslationService>> _loggerMock;
+        private OpenAiSettings _openAiSettings;
+        private TranslationService _service;
+
         [Test]
         public async Task TranslateAsync_WithValidInput_ReturnsSuccessfulResponse()
         {
@@ -42,7 +41,7 @@ namespace Diksy.WebApi.UnitTests.Services
             string model = "gpt-4o";
             string language = "Spanish";
 
-            var translationInfoModel = new TranslationInfoModel
+            TranslationInfoModel translationInfoModel = new()
             {
                 Phrase = phrase,
                 Translation = "Hola",
@@ -52,11 +51,12 @@ namespace Diksy.WebApi.UnitTests.Services
             };
 
             _translatorMock.Setup(t => t.TranslateAsync(
-                phrase, model, language, It.IsAny<CancellationToken>()))
+                    phrase, model, language, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            var result = await _service.TranslateAsync(phrase, model, language, CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
+                cancellationToken: CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
@@ -78,7 +78,7 @@ namespace Diksy.WebApi.UnitTests.Services
             string language = "Spanish";
             string expectedModel = _openAiSettings?.DefaultModel ?? AllowedModels.Gpt4O;
 
-            var translationInfoModel = new TranslationInfoModel
+            TranslationInfoModel translationInfoModel = new()
             {
                 Phrase = phrase,
                 Translation = "Hola",
@@ -88,17 +88,20 @@ namespace Diksy.WebApi.UnitTests.Services
             };
 
             _translatorMock.Setup(t => t.TranslateAsync(
-                phrase, expectedModel, language, It.IsAny<CancellationToken>()))
+                    phrase, expectedModel, language, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            var result = await _service.TranslateAsync(phrase, model, language, CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
+                cancellationToken: CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
             result.Success.ShouldBeTrue();
-            
-            _translatorMock.Verify(t => t.TranslateAsync(phrase, expectedModel, language, It.IsAny<CancellationToken>()), Times.Once);
+
+            _translatorMock.Verify(
+                expression: t => t.TranslateAsync(phrase, expectedModel, language, It.IsAny<CancellationToken>()),
+                times: Times.Once);
         }
 
         [Test]
@@ -110,7 +113,7 @@ namespace Diksy.WebApi.UnitTests.Services
             string? language = null;
             string expectedLanguage = AllowedLanguages.English;
 
-            var translationInfoModel = new TranslationInfoModel
+            TranslationInfoModel translationInfoModel = new()
             {
                 Phrase = phrase,
                 Translation = "Hola",
@@ -120,16 +123,19 @@ namespace Diksy.WebApi.UnitTests.Services
             };
 
             _translatorMock.Setup(t => t.TranslateAsync(
-                phrase, model, expectedLanguage, It.IsAny<CancellationToken>()))
+                    phrase, model, expectedLanguage, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            var result = await _service.TranslateAsync(phrase, model, language, CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
+                cancellationToken: CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
             result.Success.ShouldBeTrue();
-            _translatorMock.Verify(t => t.TranslateAsync(phrase, model, expectedLanguage, It.IsAny<CancellationToken>()), Times.Once);
+            _translatorMock.Verify(
+                expression: t => t.TranslateAsync(phrase, model, expectedLanguage, It.IsAny<CancellationToken>()),
+                times: Times.Once);
         }
 
         [Test]
@@ -142,11 +148,12 @@ namespace Diksy.WebApi.UnitTests.Services
             string errorMessage = "Translation error";
 
             _translatorMock.Setup(t => t.TranslateAsync(
-                phrase, model, language, It.IsAny<CancellationToken>()))
+                    phrase, model, language, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new TranslationException(errorMessage));
 
             // Act
-            var result = await _service.TranslateAsync(phrase, model, language, CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
+                cancellationToken: CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
@@ -164,9 +171,9 @@ namespace Diksy.WebApi.UnitTests.Services
             string model = "gpt-4o";
             string language = "Spanish";
 
-            var translationInfoModel = new TranslationInfoModel
+            TranslationInfoModel translationInfoModel = new()
             {
-                Phrase = "Different", 
+                Phrase = "Different",
                 Translation = "Hola",
                 Transcription = "həˈloʊ",
                 Example = "Hola, ¿cómo estás?",
@@ -174,11 +181,12 @@ namespace Diksy.WebApi.UnitTests.Services
             };
 
             _translatorMock.Setup(t => t.TranslateAsync(
-                phrase, model, language, It.IsAny<CancellationToken>()))
+                    phrase, model, language, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            var result = await _service.TranslateAsync(phrase, model, language, CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
+                cancellationToken: CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
@@ -187,4 +195,4 @@ namespace Diksy.WebApi.UnitTests.Services
             result.Errors.ShouldNotBeNull();
         }
     }
-} 
+}

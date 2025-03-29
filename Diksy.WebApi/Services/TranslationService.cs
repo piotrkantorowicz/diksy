@@ -75,6 +75,11 @@ namespace Diksy.WebApi.Services
             {
                 throw new TranslationException("Example is null or empty");
             }
+            
+            if (string.IsNullOrEmpty(translation.TranslationOfExample))
+            {
+                throw new TranslationException("Translation of example is null or empty");
+            }
         }
     }
 }

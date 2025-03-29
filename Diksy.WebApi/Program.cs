@@ -1,7 +1,9 @@
 using Diksy.Translation.OpenAI;
 using Diksy.Translation.OpenAI.Extensions;
 using Diksy.WebApi.Services;
+using Microsoft.AspNetCore.RateLimiting;
 using NSwag;
+using System.Threading.RateLimiting;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,17 @@ builder.Services.AddOpenApiDocument(config =>
         document.Info.Description = "API for translating phrases using AI";
         document.Info.Contact = new OpenApiContact { Name = "Support", Email = "support@diksy.com" };
     };
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter(policyName: "translation", configureOptions: config =>
+    {
+        config.Window = TimeSpan.FromMinutes(1);
+        config.PermitLimit = 20;
+        config.QueueLimit = 10;
+        config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
 });
 
 OpenAiSettings openAiSettings = builder.Configuration.GetSection("OpenAI").Get<OpenAiSettings>()
