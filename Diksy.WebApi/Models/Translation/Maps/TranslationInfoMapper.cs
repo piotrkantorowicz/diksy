@@ -12,7 +12,8 @@ namespace Diksy.WebApi.Models.Translation.Maps
                 Phrase = translationInfo.Phrase,
                 Translation = translationInfo.Translation,
                 Transcription = translationInfo.Transcription,
-                Example = translationInfo.Example
+                Example = translationInfo.Example,
+                TranslationOfExample = translationInfo.TranslationOfExample
             };
         }
 
@@ -23,7 +24,8 @@ namespace Diksy.WebApi.Models.Translation.Maps
                 Phrase = translationInfoDto.Phrase,
                 Translation = translationInfoDto.Translation,
                 Transcription = translationInfoDto.Transcription,
-                Example = translationInfoDto.Example
+                Example = translationInfoDto.Example,
+                TranslationOfExample = translationInfoDto.TranslationOfExample
             };
         }
     }

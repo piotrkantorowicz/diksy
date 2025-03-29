@@ -3,9 +3,9 @@ using Diksy.Translation.Exceptions;
 using Diksy.Translation.OpenAI;
 using Diksy.Translation.Services;
 using Diksy.WebApi.Models.Translation;
+using Diksy.WebApi.Models.Translation.Maps;
 using TranslationInfoModel = Diksy.Translation.Models.TranslationInfo;
 using TranslationInfoDto = Diksy.WebApi.Models.Translation.TranslationInfo;
-using Diksy.WebApi.Models.Translation.Maps;
 
 namespace Diksy.WebApi.Services
 {
@@ -35,7 +35,7 @@ namespace Diksy.WebApi.Services
                 TranslationInfoModel translationInfo =
                     await _translator.TranslateAsync(word: phrase, model: defaultModel, language: defaultLanguage);
 
-                TranslationInfoDto translationInfoDto =                    TranslationInfoMapper.MapFrom(translationInfo: translationInfo);
+                TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo: translationInfo);
 
                 _logger.LogInformation(message: "Successfully translated phrase: {Phrase} to {Translation}",
                     phrase, translationInfoDto.Translation);

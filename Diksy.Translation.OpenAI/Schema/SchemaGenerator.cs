@@ -20,7 +20,7 @@ namespace Diksy.Translation.OpenAI.Schema
             // Set required properties by marking them as required in the schema
             foreach (KeyValuePair<string, JsonSchemaProperty> property in schema.Properties)
             {
-                property.Value.IsRequired = requiredPropertiesToCompare.Contains(property.Key);
+                property.Value.IsRequired = requiredPropertiesToCompare.Contains(property.Key.ToLower());
             }
 
             return schema.ToJson();

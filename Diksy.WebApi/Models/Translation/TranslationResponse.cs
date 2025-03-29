@@ -22,7 +22,8 @@ namespace Diksy.WebApi.Models.Translation
         {
             Success = success;
             Response = response;
-            Errors = errors;}
+            Errors = errors;
+        }
 
         /// <summary>Indicates if the translation was successful</summary>
         public bool Success { get; init; }
@@ -34,30 +35,23 @@ namespace Diksy.WebApi.Models.Translation
         public IEnumerable<string>? Errors { get; init; }
 
         /// <summary>
-        /// Creates a successful translation response with the provided translation information
+        ///     Creates a successful translation response with the provided translation information
         /// </summary>
         /// <param name="translationInfo">The translation details to include in the response</param>
         /// <returns>A TranslationResponse indicating success with the provided translation</returns>
         public static TranslationResponse SuccessResponse(TranslationInfo translationInfo)
         {
-            return new TranslationResponse
-            {
-                Success = true,
-                Response = translationInfo
-            };
+            return new TranslationResponse { Success = true, Response = translationInfo };
         }
 
         /// <summary>
-        /// Creates an error translation response with the provided error message and optional exception
+        ///     Creates an error translation response with the provided error message and optional exception
         /// </summary>
         /// <param name="errorMessage">The error message describing what went wrong</param>
         /// <returns>A TranslationResponse indicating failure with the error details</returns>
         public static TranslationResponse ErrorResponse(string errorMessage)
         {
-            return new TranslationResponse
-            {
-                Success = false,
-                Errors = [errorMessage]     };
+            return new TranslationResponse { Success = false, Errors = [errorMessage] };
         }
     }
 }

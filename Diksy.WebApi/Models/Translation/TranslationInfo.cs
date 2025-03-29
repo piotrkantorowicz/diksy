@@ -19,12 +19,16 @@ namespace Diksy.WebApi.Models.Translation
         /// <param name="translation">The translated text in the target language</param>
         /// <param name="transcription">Phonetic transcription of the translated text</param>
         /// <param name="example">An example usage of the translated phrase in context</param>
-        public TranslationInfo(string phrase, string translation, string transcription, string example)
+        /// <param name="translationOfExample">Translation of the example sentence</param>
+        public TranslationInfo(string phrase, string translation, string transcription, string example,
+            string translationOfExample)
+            : this()
         {
             Phrase = phrase;
             Translation = translation;
             Transcription = transcription;
             Example = example;
+            TranslationOfExample = translationOfExample;
         }
 
         /// <summary>The original phrase that was translated</summary>
@@ -38,5 +42,8 @@ namespace Diksy.WebApi.Models.Translation
 
         /// <summary>An example usage of the translated phrase in context</summary>
         public required string Example { get; init; }
+
+        /// <summary>Translation of the example sentence</summary>
+        public required string TranslationOfExample { get; init; }
     }
 }

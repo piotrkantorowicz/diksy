@@ -27,7 +27,8 @@ namespace Diksy.Translation.OpenAI
             string[] requiredProperties =
             [
                 nameof(TranslationInfo.Phrase), nameof(TranslationInfo.Translation),
-                nameof(TranslationInfo.Transcription), nameof(TranslationInfo.Example)
+                nameof(TranslationInfo.Transcription), nameof(TranslationInfo.Example),
+                nameof(TranslationInfo.TranslationOfExample)
             ];
 
             string jsonSchema = _schemaGenerator.GenerateSchema<TranslationInfo>(requiredProperties);
@@ -49,6 +50,7 @@ namespace Diksy.Translation.OpenAI
                 .AppendLine("1. Translation that captures the full meaning of the phrase/word")
                 .AppendLine("2. Phonetic transcription (for each word if it's a phrasal verb)")
                 .AppendLine("3. Example sentence showing proper usage in context")
+                .AppendLine("4. Translation of the example sentence")
                 .AppendLine()
                 .AppendLine(
                     "Note: If this is a phrasal verb or multi-word expression, ensure the translation reflects the complete meaning rather than individual words.")

@@ -4,10 +4,6 @@ namespace Diksy.Translation.Models
 {
     public class TranslationInfo
     {
-        public TranslationInfo()
-        {
-        }
-
         [JsonPropertyName("phrase")] public required string Phrase { get; init; }
 
         [JsonPropertyName("translation")] public required string Translation { get; init; }
@@ -15,5 +11,8 @@ namespace Diksy.Translation.Models
         [JsonPropertyName("transcription")] public required string Transcription { get; init; }
 
         [JsonPropertyName("example")] public required string Example { get; init; }
+
+        [JsonPropertyName("translationOfExample")]
+        public required string TranslationOfExample { get; init; }
     }
 }
