@@ -8,6 +8,11 @@ namespace Diksy.Translation.OpenAI.Factories
 
         public OpenAIClient CreateClient()
         {
+            if (string.IsNullOrEmpty(_settings.ApiKey))
+            {
+                throw new InvalidOperationException("OpenAI API key is not configured");
+            }
+
             return new OpenAIClient(_settings.ApiKey);
         }
     }

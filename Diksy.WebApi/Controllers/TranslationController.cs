@@ -67,7 +67,6 @@ namespace Diksy.WebApi.Controllers
                 return Ok(result);
             }
 
-            _logger.LogError(exception: result.Exception, message: "Error occurred during translation");
             return StatusCode(statusCode: StatusCodes.Status500InternalServerError,
                 value: new ApiProblemDetails
                 {

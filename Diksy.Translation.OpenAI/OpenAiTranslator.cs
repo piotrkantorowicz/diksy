@@ -58,8 +58,13 @@ namespace Diksy.Translation.OpenAI
                 await chatClient.CompleteChatAsync(messages: [prompt], options: chatCompletionOptions) ??
                 throw new TranslationException("Translation response is empty");
 
+            if (openAiResponse.Value.Content.Count == 0)
+            {
+                throw new TranslationException("No content returned in translation response");
+            }
+
             string jsonResponse = openAiResponse.Value.Content[0].Text ??
-                                  throw new TranslationException("Translation reponse text is empty");
+                                  throw new TranslationException("Translation response text is empty");
 
             TranslationInfo translation = JsonSerializer.Deserialize<TranslationInfo>(jsonResponse) ??
                                           throw new TranslationException("Unable to deserialize translation response");

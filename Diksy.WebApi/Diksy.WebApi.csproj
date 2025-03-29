@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -6,16 +6,17 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
-    </PropertyGroup>
+      <UserSecretsId>4ddcd890-ed7d-46b0-911f-fa3aa9970856</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Diksy.Translation\Diksy.Translation.csproj"/>
-        <ProjectReference Include="..\Diksy.Translation.OpenAI\Diksy.Translation.OpenAI.csproj"/>
+        <ProjectReference Include="..\Diksy.Translation\Diksy.Translation.csproj" />
+        <ProjectReference Include="..\Diksy.Translation.OpenAI\Diksy.Translation.OpenAI.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
-        <PackageReference Include="NSwag.AspNetCore" Version="14.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
+        <PackageReference Include="NSwag.AspNetCore" Version="14.0.3" />
     </ItemGroup>
 
 </Project>

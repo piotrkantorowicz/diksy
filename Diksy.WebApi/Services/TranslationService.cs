@@ -3,6 +3,9 @@ using Diksy.Translation.Exceptions;
 using Diksy.Translation.OpenAI;
 using Diksy.Translation.Services;
 using Diksy.WebApi.Models.Translation;
+using TranslationInfoModel = Diksy.Translation.Models.TranslationInfo;
+using TranslationInfoDto = Diksy.WebApi.Models.Translation.TranslationInfo;
+using Diksy.WebApi.Models.Translation.Maps;
 
 namespace Diksy.WebApi.Services
 {
@@ -29,35 +32,26 @@ namespace Diksy.WebApi.Services
                 _logger.LogInformation(message: "Translating phrase: {Phrase} to {Language} using model {Model}",
                     phrase, defaultLanguage, defaultModel);
 
-                Translation.Models.TranslationInfo result =
+                TranslationInfoModel translationInfo =
                     await _translator.TranslateAsync(word: phrase, model: defaultModel, language: defaultLanguage);
 
-                TranslationInfo resultModel = new()
-                {
-                    Phrase = result.Phrase,
-                    Translation = result.Translation,
-                    Transcription = result.Transcription,
-                    Example = result.Example
-                };
+                TranslationInfoDto translationInfoDto =                    TranslationInfoMapper.MapFrom(translationInfo: translationInfo);
 
                 _logger.LogInformation(message: "Successfully translated phrase: {Phrase} to {Translation}",
-                    phrase, result.Translation);
+                    phrase, translationInfoDto.Translation);
 
-                SanitizeTranslationResponse(phrase: phrase, translation: resultModel);
+                SanitizeTranslationResponse(phrase: phrase, translation: translationInfoDto);
 
-                return new TranslationResponse { Success = true, Response = resultModel };
+                return TranslationResponse.SuccessResponse(translationInfoDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(exception: ex, message: "Error translating phrase: {Phrase}", phrase);
-                return new TranslationResponse
-                {
-                    Success = false, Response = null!, Errors = [$"Translation error: {ex.Message}"], Exception = ex
-                };
+                return TranslationResponse.ErrorResponse($"Translation error: {ex.Message}");
             }
         }
 
-        private static void SanitizeTranslationResponse(string phrase, TranslationInfo translation)
+        private static void SanitizeTranslationResponse(string phrase, TranslationInfoDto translation)
         {
             if (string.IsNullOrEmpty(translation.Phrase) ||
                 !translation.Phrase.Equals(value: phrase, comparisonType: StringComparison.OrdinalIgnoreCase))

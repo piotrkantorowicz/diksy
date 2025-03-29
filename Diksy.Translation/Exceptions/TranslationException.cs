@@ -1,9 +1,6 @@
 namespace Diksy.Translation.Exceptions
 {
-    public class TranslationException : Exception
+    public class TranslationException(string message) : Exception(message)
     {
-        public TranslationException(string message) : base(message)
-        {
-        }
     }
 }
