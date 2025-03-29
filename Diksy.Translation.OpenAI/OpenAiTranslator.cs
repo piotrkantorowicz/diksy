@@ -1,29 +1,28 @@
 using Diksy.Translation.Exceptions;
 using Diksy.Translation.Models;
-using Diksy.Translation.OpenAI.Factories;
 using Diksy.Translation.OpenAI.Schema;
+using Diksy.Translation.OpenAI.Services;
 using Diksy.Translation.Services;
-using OpenAI;
 using OpenAI.Chat;
-using System.ClientModel;
 using System.Text;
 using System.Text.Json;
 
 namespace Diksy.Translation.OpenAI
 {
-    internal sealed class OpenAiTranslator(IOpenAiFactory openAiFactory, ISchemaGenerator schemaGenerator) : ITranslator
+    internal sealed class OpenAiTranslator(
+        IClientTranslationService chatClientTranslationService,
+        ISchemaGenerator schemaGenerator) : ITranslator
     {
-        private readonly IOpenAiFactory _openAiFactory =
-            openAiFactory ?? throw new ArgumentNullException(nameof(openAiFactory));
+        private readonly IClientTranslationService _chatClientTranslationService =
+            chatClientTranslationService ?? throw new ArgumentNullException(nameof(chatClientTranslationService));
 
         private readonly ISchemaGenerator _schemaGenerator =
             schemaGenerator ?? throw new ArgumentNullException(nameof(schemaGenerator));
 
-        public async Task<TranslationInfo> TranslateAsync(string phrase, string model, string language)
-        {
-            OpenAIClient openAiClient = _openAiFactory.CreateClient();
-            ChatClient? chatClient = openAiClient.GetChatClient(model);
 
+        public async Task<TranslationInfo> TranslateAsync(string phrase, string model, string language,
+            CancellationToken cancellationToken)
+        {
             string[] requiredProperties =
             [
                 nameof(TranslationInfo.Phrase), nameof(TranslationInfo.Translation),
@@ -56,22 +55,35 @@ namespace Diksy.Translation.OpenAI
                     "Note: If this is a phrasal verb or multi-word expression, ensure the translation reflects the complete meaning rather than individual words.")
                 .ToString();
 
-            ClientResult<ChatCompletion> openAiResponse =
-                await chatClient.CompleteChatAsync(messages: [prompt], options: chatCompletionOptions) ??
-                throw new TranslationException("Translation response is empty");
+            ChatMessageContent openAiResponse =
+                await _chatClientTranslationService.TranslateAsync(prompt: prompt, model: model,
+                    options: chatCompletionOptions,
+                    cancellationToken: cancellationToken);
 
-            if (openAiResponse.Value.Content.Count == 0)
+            if (openAiResponse.Count == 0)
             {
                 throw new TranslationException("No content returned in translation response");
             }
 
-            string jsonResponse = openAiResponse.Value.Content[0].Text ??
-                                  throw new TranslationException("Translation response text is empty");
+            string responseText = openAiResponse[0].Text;
 
-            TranslationInfo translation = JsonSerializer.Deserialize<TranslationInfo>(jsonResponse) ??
-                                          throw new TranslationException("Unable to deserialize translation response");
+            string jsonResponse = !string.IsNullOrWhiteSpace(responseText)
+                ? responseText
+                : throw new TranslationException("Translation response text is empty");
 
-            return translation;
+            try
+            {
+                TranslationInfo translation = JsonSerializer.Deserialize<TranslationInfo>(jsonResponse) ??
+                                              throw new TranslationException(
+                                                  "Unable to deserialize translation response");
+
+                return translation;
+            }
+            catch (JsonException jsonException)
+            {
+                throw new TranslationException(message: "Unable to deserialize translation response",
+                    innerException: jsonException);
+            }
         }
     }
 }

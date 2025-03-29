@@ -1,5 +1,6 @@
 using Diksy.Translation.OpenAI.Factories;
 using Diksy.Translation.OpenAI.Schema;
+using Diksy.Translation.OpenAI.Services;
 using Diksy.Translation.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,8 @@ namespace Diksy.Translation.OpenAI.Extensions
             services.AddSingleton(settings);
             services.AddSingleton<IOpenAiFactory, OpenAiFactory>();
             services.AddSingleton<ISchemaGenerator, SchemaGenerator>();
-            services.AddSingleton<ITranslator, OpenAiTranslator>();
+            services.AddScoped<ITranslator, OpenAiTranslator>();
+            services.AddScoped<IClientTranslationService, ChatTranslationService>();
 
             return services;
         }

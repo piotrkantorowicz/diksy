@@ -22,7 +22,8 @@ namespace Diksy.WebApi.Services
 
         private readonly ITranslator _translator = translator ?? throw new ArgumentNullException(nameof(translator));
 
-        public async Task<TranslationResponse> TranslateAsync(string phrase, string? model, string? language)
+        public async Task<TranslationResponse> TranslateAsync(string phrase, string? model, string? language,
+            CancellationToken cancellationToken)
         {
             try
             {
@@ -33,7 +34,8 @@ namespace Diksy.WebApi.Services
                     phrase, defaultLanguage, defaultModel);
 
                 TranslationInfoModel translationInfo =
-                    await _translator.TranslateAsync(word: phrase, model: defaultModel, language: defaultLanguage);
+                    await _translator.TranslateAsync(word: phrase, model: defaultModel, language: defaultLanguage,
+                        cancellationToken: cancellationToken);
 
                 TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo: translationInfo);
 

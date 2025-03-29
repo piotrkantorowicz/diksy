@@ -60,7 +60,8 @@ namespace Diksy.WebApi.Controllers
             TranslationResponse result = await _translationService.TranslateAsync(
                 phrase: request.Phrase,
                 model: request.Model,
-                language: request.Language);
+                language: request.Language,
+                cancellationToken: default);
 
             if (result.Success)
             {
