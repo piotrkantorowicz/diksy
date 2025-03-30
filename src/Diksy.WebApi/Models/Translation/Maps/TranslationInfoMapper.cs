@@ -7,6 +7,8 @@ namespace Diksy.WebApi.Models.Translation.Maps
     {
         public static TranslationInfoDto MapFrom(TranslationInfoModel translationInfo)
         {
+            ArgumentNullException.ThrowIfNull(translationInfo);
+
             return new TranslationInfoDto
             {
                 Phrase = translationInfo.Phrase,
@@ -19,6 +21,8 @@ namespace Diksy.WebApi.Models.Translation.Maps
 
         public static TranslationInfoModel MapTo(TranslationInfoDto translationInfoDto)
         {
+            ArgumentNullException.ThrowIfNull(translationInfoDto);
+
             return new TranslationInfoModel
             {
                 Phrase = translationInfoDto.Phrase,
