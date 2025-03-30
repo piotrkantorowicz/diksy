@@ -1,0 +1,63 @@
+name: test
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      codecov_token:
+        description: "Token used to upload coverage results"
+        required: true
+env:
+  DOTNET_VERSION: "9.0.x"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.2.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4.2.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: https://nuget.pkg.github.com/piotrkantorowicz/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore 
+
+      - name: Tests
+        run: dotnet test --no-build --settings tests.runsettings --results-directory "TestResults" --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5.1.2
+        with:
+          fail_ci_if_error: false
+          token: ${{ secrets.codecov_token }} 
+          slug: piotrkantorowicz/diksy
+          verbose: true 
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: TestResults
+          path: TestResults
+
+      - name: Tests report generation
+        uses: dorny/test-reporter@v1.9.1
+        if: success() || failure()
+        with:
+          name: test-results (${{ env.DOTNET_VERSION }})
+          path: "TestResults/*.trx"
+          reporter: dotnet-trx
+          list-tests: "failed"

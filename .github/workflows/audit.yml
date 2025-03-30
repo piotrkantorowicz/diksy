@@ -1,0 +1,17 @@
+name: audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *"
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  code-ql:
+    uses: ./.github/workflows/reusable-code-ql.yml
+
+  trivy:
+    uses: ./.github/workflows/reusable-trivy.yml
