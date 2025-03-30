@@ -64,7 +64,7 @@ namespace Diksy.WebApi.Controllers
                 phrase: request.Phrase,
                 model: request.Model,
                 language: request.Language,
-                cancellationToken: default);
+                cancellationToken: HttpContext.RequestAborted);
 
             if (result.Success)
             {
@@ -75,7 +75,9 @@ namespace Diksy.WebApi.Controllers
                 value: new ApiProblemDetails
                 {
                     Title = "Translation Error",
-                    Detail = "An unexpected error occurred during translation.",
+                    Detail = result.Errors != null && result.Errors.Any()
+                        ? string.Join("; ", result.Errors)
+                        : "An unexpected error occurred during translation.",
                     Status = StatusCodes.Status500InternalServerError
                 });
         }
