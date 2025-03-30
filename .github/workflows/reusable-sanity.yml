@@ -1,0 +1,48 @@
+name: sanity
+on:
+  workflow_call:
+
+jobs:
+  check-commit-message:
+    name: Validate commit messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check subject line length
+        uses: gsactions/commit-message-checker@v2
+        with:
+          excludeDescription: "true"
+          excludeTitle: "true"
+          checkAllCommitMessages: "true"
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          pattern: '^.{0,80}(\n.*)*$'
+          error: "Subject of all commits in the PR has to be shorter than 80 characters."
+
+      - name: Disallow issue hashtag in subject
+        uses: gsactions/commit-message-checker@v2
+        with:
+          excludeDescription: "true"
+          excludeTitle: "true"
+          checkAllCommitMessages: "true"
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          pattern: '^(?!.*#\d*).*(\n.*)*$'
+          error: "Do not include issue hashtags (e.g., #123) in the subject of any commit in the PR."
+
+      - name: Disallow specific prefixes in title
+        uses: gsactions/commit-message-checker@v2
+        with:
+          excludeDescription: "true"
+          excludeTitle: "true"
+          checkAllCommitMessages: "true"
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          pattern: '^(?!(.*(feat|fix|docs|style|refactor|perf|test|chore):.*(\n.*)*$)).*'
+          error: 'Do not use prefixes like "feat:", "fix:", etc., in the subject of any commit in the PR.'
+
+      - name: Disallow lowercase subject
+        uses: gsactions/commit-message-checker@v2
+        with:
+          excludeDescription: "true"
+          excludeTitle: "true"
+          checkAllCommitMessages: "true"
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          pattern: '^[A-Z].*(\n.*)*$'
+          error: "Subject of all commits in the PR has to start with a capital letter."
