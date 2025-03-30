@@ -65,6 +65,10 @@ namespace Diksy.WebApi.UnitTests.Controllers
             responseValue.Response.Transcription.ShouldBe("həˈloʊ");
             responseValue.Response.Example.ShouldBe("Hola, ¿cómo estás?");
             responseValue.Response.TranslationOfExample.ShouldBe("Hello, how are you?");
+
+            _translationServiceMock.Verify(expression: s => s.TranslateAsync(
+                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
+                times: Times.Once);
         }
 
         [Test]
@@ -88,6 +92,10 @@ namespace Diksy.WebApi.UnitTests.Controllers
             problemDetails.Title.ShouldBe("Validation Failed");
             problemDetails.Status.ShouldBe(StatusCodes.Status400BadRequest);
             problemDetails?.Errors?.ShouldContainKey("Phrase");
+
+            _translationServiceMock.Verify(expression: s => s.TranslateAsync(
+                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
+                times: Times.Never);
         }
 
         [Test]
@@ -112,6 +120,10 @@ namespace Diksy.WebApi.UnitTests.Controllers
             ApiProblemDetails problemDetails = statusCodeResult.Value.ShouldBeOfType<ApiProblemDetails>();
             problemDetails.Title.ShouldBe("Translation Error");
             problemDetails.Status.ShouldBe(StatusCodes.Status500InternalServerError);
+
+            _translationServiceMock.Verify(expression: s => s.TranslateAsync(
+                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
+                times: Times.Once);
         }
     }
 }
