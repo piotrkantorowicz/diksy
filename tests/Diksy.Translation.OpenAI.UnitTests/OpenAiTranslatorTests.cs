@@ -19,8 +19,8 @@ namespace Diksy.Translation.OpenAI.UnitTests
         {
             _chatClientTranslationServiceMock = new Mock<IClientTranslationService>();
             _schemaGeneratorMock = new SchemaGenerator();
-            _translator = new OpenAiTranslator(chatClientTranslationService: _chatClientTranslationServiceMock.Object,
-                schemaGenerator: _schemaGeneratorMock);
+            _translator = new OpenAiTranslator(_chatClientTranslationServiceMock.Object,
+                _schemaGeneratorMock);
         }
 
         private Mock<IClientTranslationService> _chatClientTranslationServiceMock;
@@ -31,7 +31,7 @@ namespace Diksy.Translation.OpenAI.UnitTests
         public async Task TranslateAsync_ShouldReturnTranslationInfo_WhenResponseIsValid()
         {
             // Arrange
-            string expectedJsonResponse =
+            const string expectedJsonResponse =
                 "{\"phrase\":\"Hello\",\"translation\":\"Hola\",\"transcription\":\"həˈloʊ\",\"example\":\"Hola, ¿cómo estás?\", \"translationOfExample\":\"Hello, how are you?\"}";
 
             TranslationInfo? expectedTranslationInfo =
@@ -42,8 +42,8 @@ namespace Diksy.Translation.OpenAI.UnitTests
                 .ReturnsAsync(new ChatMessageContent(expectedJsonResponse));
 
             // Act
-            TranslationInfo result = await _translator.TranslateAsync(word: "Hello", model: "gpt-4o",
-                language: "Spanish", cancellationToken: It.IsAny<CancellationToken>());
+            TranslationInfo result = await _translator.TranslateAsync("Hello", "gpt-4o",
+                "Spanish", It.IsAny<CancellationToken>());
 
             // Assert
             result.ShouldNotBeNull();
@@ -64,8 +64,8 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act & Assert
             await Should.ThrowAsync<TranslationException>(async () =>
-                await _translator.TranslateAsync(word: "Hello", model: "gpt-4o", language: "Spanish",
-                    cancellationToken: It.IsAny<CancellationToken>()));
+                await _translator.TranslateAsync("Hello", "gpt-4o", "Spanish",
+                    It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -78,8 +78,8 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act & Assert
             await Should.ThrowAsync<TranslationException>(async () =>
-                await _translator.TranslateAsync(word: "Hello", model: "gpt-4o", language: "Spanish",
-                    cancellationToken: It.IsAny<CancellationToken>()));
+                await _translator.TranslateAsync("Hello", "gpt-4o", "Spanish",
+                    It.IsAny<CancellationToken>()));
         }
     }
 }

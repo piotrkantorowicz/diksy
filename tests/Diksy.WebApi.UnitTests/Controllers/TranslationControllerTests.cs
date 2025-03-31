@@ -91,7 +91,7 @@ namespace Diksy.WebApi.UnitTests.Controllers
             ApiProblemDetails problemDetails = badRequestResult.Value.ShouldBeOfType<ApiProblemDetails>();
             problemDetails.Title.ShouldBe("Validation Failed");
             problemDetails.Status.ShouldBe(StatusCodes.Status400BadRequest);
-            problemDetails?.Errors?.ShouldContainKey("Phrase");
+            problemDetails.Errors?.ShouldContainKey("Phrase");
 
             _translationServiceMock.Verify(expression: s => s.TranslateAsync(
                     request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
@@ -103,7 +103,6 @@ namespace Diksy.WebApi.UnitTests.Controllers
         {
             // Arrange
             TranslationRequest request = new() { Phrase = "Hello", Model = "gpt-4o", Language = "Spanish" };
-
             TranslationResponse failedResponse = new() { Success = false, Errors = ["Translation service error"] };
 
             _translationServiceMock.Setup(s => s.TranslateAsync(

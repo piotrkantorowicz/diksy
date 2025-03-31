@@ -37,9 +37,9 @@ namespace Diksy.WebApi.UnitTests.Services
         public async Task TranslateAsync_WithValidInput_ReturnsSuccessfulResponse()
         {
             // Arrange
-            string phrase = "Hello";
-            string model = "gpt-4o";
-            string language = "Spanish";
+            const string phrase = "Hello";
+            const string model = "gpt-4o";
+            const string language = "Spanish";
 
             TranslationInfoModel translationInfoModel = new()
             {
@@ -73,10 +73,10 @@ namespace Diksy.WebApi.UnitTests.Services
         public async Task TranslateAsync_WithNullModel_UsesDefaultModel()
         {
             // Arrange
-            string phrase = "Hello";
+            const string phrase = "Hello";
+            const string language = "Spanish";
             string? model = null;
-            string language = "Spanish";
-            string expectedModel = _openAiSettings?.DefaultModel ?? AllowedModels.Gpt4O;
+            string expectedModel = _openAiSettings.DefaultModel ?? AllowedModels.Gpt4O;
 
             TranslationInfoModel translationInfoModel = new()
             {
@@ -108,11 +108,11 @@ namespace Diksy.WebApi.UnitTests.Services
         public async Task TranslateAsync_WithNullLanguage_UsesEnglishLanguage()
         {
             // Arrange
-            string phrase = "Hello";
-            string model = "gpt-4o";
+            const string phrase = "Hello";
+            const string model = "gpt-4o";
+            const string expectedLanguage = AllowedLanguages.English;
             string? language = null;
-            string expectedLanguage = AllowedLanguages.English;
-
+            
             TranslationInfoModel translationInfoModel = new()
             {
                 Phrase = phrase,
@@ -142,10 +142,10 @@ namespace Diksy.WebApi.UnitTests.Services
         public async Task TranslateAsync_WhenTranslatorThrowsException_ReturnsFailureResponse()
         {
             // Arrange
-            string phrase = "Hello";
-            string model = "gpt-4o";
-            string language = "Spanish";
-            string errorMessage = "Translation error";
+            const string phrase = "Hello";
+            const string model = "gpt-4o";
+            const string language = "Spanish";
+            const string errorMessage = "Translation error";
 
             _translatorMock.Setup(t => t.TranslateAsync(
                     phrase, model, language, It.IsAny<CancellationToken>()))
@@ -167,9 +167,9 @@ namespace Diksy.WebApi.UnitTests.Services
         public async Task TranslateAsync_WhenTranslatorReturnsInvalidResponse_ReturnsFailureResponse()
         {
             // Arrange
-            string phrase = "Hello";
-            string model = "gpt-4o";
-            string language = "Spanish";
+            const string phrase = "Hello";
+            const string model = "gpt-4o";
+            const string language = "Spanish";
 
             TranslationInfoModel translationInfoModel = new()
             {
