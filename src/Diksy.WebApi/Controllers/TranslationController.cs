@@ -64,7 +64,7 @@ namespace Diksy.WebApi.Controllers
                 phrase: request.Phrase,
                 model: request.Model,
                 language: request.Language,
-                cancellationToken: HttpContext.RequestAborted);
+                cancellationToken: HttpContext?.RequestAborted ?? CancellationToken.None);
 
             if (result.Success)
             {

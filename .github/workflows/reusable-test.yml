@@ -36,7 +36,7 @@ jobs:
         run: dotnet build --no-restore 
 
       - name: Tests
-        run: dotnet test --no-build --settings tests.runsettings --results-directory "TestResults" --collect:"XPlat Code Coverage"
+        run: dotnet test --no-build --settings tests.runsettings --results-directory "TestResults" --collect:"Code Coverage"
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5.1.2
