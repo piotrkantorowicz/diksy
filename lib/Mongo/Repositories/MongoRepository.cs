@@ -1,78 +1,88 @@
-using System.Linq.Expressions;
 using Mongo.Database;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 
 namespace Mongo.Repositories
 {
     /// <summary>
-    /// Generic repository implementation for MongoDB operations.
+    ///     Generic repository implementation for MongoDB operations.
     /// </summary>
     /// <typeparam name="TDocument">The document type stored in the collection.</typeparam>
     public class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : class
     {
-        private readonly IMongoCollection<TDocument> _collection;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="MongoRepository{TDocument}"/> class.
+        ///     Initializes a new instance of the <see cref="MongoRepository{TDocument}" /> class.
         /// </summary>
         /// <param name="context">The MongoDB context.</param>
         /// <param name="collectionName">The name of the collection.</param>
         public MongoRepository(MongoDbContext context, string collectionName)
         {
-            _collection = context.GetCollection<TDocument>(collectionName);
+            Collection = context.GetCollection<TDocument>(collectionName);
         }
 
         /// <summary>
-        /// Gets the MongoDB collection for this repository.
+        ///     Gets the MongoDB collection for this repository.
         /// </summary>
-        public IMongoCollection<TDocument> Collection => _collection;
+        public IMongoCollection<TDocument> Collection { get; }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter,
+            CancellationToken cancellationToken = default)
         {
-            return await _collection.Find(filter).ToListAsync(cancellationToken);
+            return await Collection.Find(filter).ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filter, CancellationToken cancellationToken = default)
+        public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filter,
+            CancellationToken cancellationToken = default)
         {
-            return await _collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+            return await Collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task InsertOneAsync(TDocument document, CancellationToken cancellationToken = default)
         {
-            await _collection.InsertOneAsync(document, new InsertOneOptions(), cancellationToken);
+            await Collection.InsertOneAsync(document: document, options: new InsertOneOptions(),
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task InsertManyAsync(IEnumerable<TDocument> documents, CancellationToken cancellationToken = default)
+        public async Task InsertManyAsync(IEnumerable<TDocument> documents,
+            CancellationToken cancellationToken = default)
         {
-            await _collection.InsertManyAsync(documents, new InsertManyOptions(), cancellationToken);
+            await Collection.InsertManyAsync(documents: documents, options: new InsertManyOptions(),
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<ReplaceOneResult> ReplaceOneAsync(Expression<Func<TDocument, bool>> filter, TDocument document, ReplaceOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<ReplaceOneResult> ReplaceOneAsync(Expression<Func<TDocument, bool>> filter,
+            TDocument document, ReplaceOptions? options = null, CancellationToken cancellationToken = default)
         {
-            return await _collection.ReplaceOneAsync(filter, document, options, cancellationToken);
+            return await Collection.ReplaceOneAsync(filter: filter, replacement: document, options: options,
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<UpdateResult> UpdateOneAsync(Expression<Func<TDocument, bool>> filter, UpdateDefinition<TDocument> update, UpdateOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<UpdateResult> UpdateOneAsync(Expression<Func<TDocument, bool>> filter,
+            UpdateDefinition<TDocument> update, UpdateOptions? options = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _collection.UpdateOneAsync(filter, update, options, cancellationToken);
+            return await Collection.UpdateOneAsync(filter: filter, update: update, options: options,
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<DeleteResult> DeleteOneAsync(Expression<Func<TDocument, bool>> filter, CancellationToken cancellationToken = default)
+        public async Task<DeleteResult> DeleteOneAsync(Expression<Func<TDocument, bool>> filter,
+            CancellationToken cancellationToken = default)
         {
-            return await _collection.DeleteOneAsync(filter, cancellationToken);
+            return await Collection.DeleteOneAsync(filter: filter, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<DeleteResult> DeleteManyAsync(Expression<Func<TDocument, bool>> filter, CancellationToken cancellationToken = default)
+        public async Task<DeleteResult> DeleteManyAsync(Expression<Func<TDocument, bool>> filter,
+            CancellationToken cancellationToken = default)
         {
-            return await _collection.DeleteManyAsync(filter, cancellationToken);
+            return await Collection.DeleteManyAsync(filter: filter, cancellationToken: cancellationToken);
         }
     }
-} 
+}
