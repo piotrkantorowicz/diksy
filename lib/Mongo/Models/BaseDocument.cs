@@ -13,6 +13,7 @@ namespace Mongo.Models
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("id")]
         public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
 
         /// <summary>

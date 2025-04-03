@@ -31,25 +31,25 @@ namespace Diksy.WebApi.Services
                 string defaultModel = model ?? _openAiOptions.Value.DefaultModel ?? AllowedModels.Gpt4O;
                 string defaultLanguage = language ?? AllowedLanguages.English;
 
-                _logger.LogInformation(message: "Translating phrase: {Phrase} to {Language} using model {Model}",
+                _logger.LogInformation("Translating phrase: {Phrase} to {Language} using model {Model}",
                     phrase, defaultLanguage, defaultModel);
 
                 TranslationInfoModel translationInfo =
                     await _translator.TranslateAsync(phrase: phrase, model: defaultModel, language: defaultLanguage,
                         cancellationToken: cancellationToken);
 
-                TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo: translationInfo);
+                TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo);
 
-                _logger.LogInformation(message: "Successfully translated phrase: {Phrase} to {Translation}",
+                _logger.LogInformation("Successfully translated phrase: {Phrase} to {Translation}",
                     phrase, translationInfoDto.Translation);
 
-                SanitizeTranslationResponse(phrase: phrase, translation: translationInfoDto);
+                SanitizeTranslationResponse(phrase, translationInfoDto);
 
                 return TranslationResponse.SuccessResponse(translationInfoDto);
             }
             catch (Exception ex)
             {
-                _logger.LogError(exception: ex, message: "Error translating phrase: {Phrase}", phrase);
+                _logger.LogError(ex, "Error translating phrase: {Phrase}", phrase);
                 return TranslationResponse.ErrorResponse($"Translation error: {ex.Message}");
             }
         }
@@ -57,7 +57,7 @@ namespace Diksy.WebApi.Services
         private static void SanitizeTranslationResponse(string phrase, TranslationInfoDto translation)
         {
             if (string.IsNullOrEmpty(translation.Phrase) ||
-                !translation.Phrase.Equals(value: phrase, comparisonType: StringComparison.OrdinalIgnoreCase))
+                !translation.Phrase.Equals(phrase, StringComparison.OrdinalIgnoreCase))
             {
                 throw new TranslationException("Phrase is null or empty or is different from the original phrase");
             }

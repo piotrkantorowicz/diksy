@@ -59,8 +59,8 @@ namespace Diksy.WebApi.UnitTests.Services
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
-                cancellationToken: CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase, model, language,
+                CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
@@ -96,16 +96,16 @@ namespace Diksy.WebApi.UnitTests.Services
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
-                cancellationToken: CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase, model, language,
+                CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
             result.Success.ShouldBeTrue();
 
             _translatorMock.Verify(
-                expression: t => t.TranslateAsync(phrase, expectedModel, language, It.IsAny<CancellationToken>()),
-                times: Times.Once);
+                t => t.TranslateAsync(phrase, expectedModel, language, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -131,15 +131,15 @@ namespace Diksy.WebApi.UnitTests.Services
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
-                cancellationToken: CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase, model, language,
+                CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
             result.Success.ShouldBeTrue();
             _translatorMock.Verify(
-                expression: t => t.TranslateAsync(phrase, model, expectedLanguage, It.IsAny<CancellationToken>()),
-                times: Times.Once);
+                t => t.TranslateAsync(phrase, model, expectedLanguage, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -156,8 +156,8 @@ namespace Diksy.WebApi.UnitTests.Services
                 .ThrowsAsync(new TranslationException(errorMessage));
 
             // Act
-            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
-                cancellationToken: CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase, model, language,
+                CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
@@ -189,8 +189,8 @@ namespace Diksy.WebApi.UnitTests.Services
                 .ReturnsAsync(translationInfoModel);
 
             // Act
-            TranslationResponse result = await _service.TranslateAsync(phrase: phrase, model: model, language: language,
-                cancellationToken: CancellationToken.None);
+            TranslationResponse result = await _service.TranslateAsync(phrase, model, language,
+                CancellationToken.None);
 
             // Assert
             result.ShouldNotBeNull();
