@@ -76,7 +76,7 @@ namespace Diksy.WebApi.Controllers
                 {
                     Title = "Translation Error",
                     Detail = result.Errors != null && result.Errors.Any()
-                        ? string.Join("; ", result.Errors)
+                        ? string.Join(separator: "; ", values: result.Errors)
                         : "An unexpected error occurred during translation.",
                     Status = StatusCodes.Status500InternalServerError
                 });

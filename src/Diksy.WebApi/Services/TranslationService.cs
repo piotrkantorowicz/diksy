@@ -4,6 +4,7 @@ using Diksy.Translation.OpenAI;
 using Diksy.Translation.Services;
 using Diksy.WebApi.Models.Translation;
 using Diksy.WebApi.Models.Translation.Maps;
+using Microsoft.Extensions.Options;
 using TranslationInfoModel = Diksy.Translation.Models.TranslationInfo;
 using TranslationInfoDto = Diksy.WebApi.Models.Translation.TranslationInfo;
 
@@ -12,13 +13,13 @@ namespace Diksy.WebApi.Services
     public class TranslationService(
         ITranslator translator,
         ILogger<TranslationService> logger,
-        OpenAiSettings openAiSettings) : ITranslationService
+        IOptions<OpenAiOptions> openAiOptions) : ITranslationService
     {
         private readonly ILogger<TranslationService>
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        private readonly OpenAiSettings _openAiSettings =
-            openAiSettings ?? throw new ArgumentNullException(nameof(openAiSettings));
+        private readonly IOptions<OpenAiOptions> _openAiOptions =
+            openAiOptions ?? throw new ArgumentNullException(nameof(openAiOptions));
 
         private readonly ITranslator _translator = translator ?? throw new ArgumentNullException(nameof(translator));
 
@@ -27,7 +28,7 @@ namespace Diksy.WebApi.Services
         {
             try
             {
-                string defaultModel = model ?? _openAiSettings.DefaultModel ?? AllowedModels.Gpt4O;
+                string defaultModel = model ?? _openAiOptions.Value.DefaultModel ?? AllowedModels.Gpt4O;
                 string defaultLanguage = language ?? AllowedLanguages.English;
 
                 _logger.LogInformation(message: "Translating phrase: {Phrase} to {Language} using model {Model}",

@@ -5,6 +5,7 @@ using Diksy.Translation.Services;
 using Diksy.WebApi.Models.Translation;
 using Diksy.WebApi.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -20,17 +21,20 @@ namespace Diksy.WebApi.UnitTests.Services
         {
             _translatorMock = new Mock<ITranslator>();
             _loggerMock = new Mock<ILogger<TranslationService>>();
-            _openAiSettings = new OpenAiSettings(ApiKey: "test-api-key", DefaultModel: AllowedModels.Gpt4O);
+            _openAiOptions = new Mock<IOptions<OpenAiOptions>>();
+
+            _openAiOptions.SetupGet(x => x.Value)
+                .Returns(new OpenAiOptions { ApiKey = "test-api-key", DefaultModel = AllowedModels.Gpt4O });
 
             _service = new TranslationService(
                 translator: _translatorMock.Object,
                 logger: _loggerMock.Object,
-                openAiSettings: _openAiSettings);
+                openAiOptions: _openAiOptions.Object);
         }
 
         private Mock<ITranslator> _translatorMock;
         private Mock<ILogger<TranslationService>> _loggerMock;
-        private OpenAiSettings _openAiSettings;
+        private Mock<IOptions<OpenAiOptions>> _openAiOptions;
         private TranslationService _service;
 
         [Test]
@@ -76,7 +80,7 @@ namespace Diksy.WebApi.UnitTests.Services
             const string phrase = "Hello";
             const string language = "Spanish";
             string? model = null;
-            string expectedModel = _openAiSettings.DefaultModel ?? AllowedModels.Gpt4O;
+            string expectedModel = _openAiOptions.Object.Value.DefaultModel ?? AllowedModels.Gpt4O;
 
             TranslationInfoModel translationInfoModel = new()
             {
@@ -112,7 +116,7 @@ namespace Diksy.WebApi.UnitTests.Services
             const string model = "gpt-4o";
             const string expectedLanguage = AllowedLanguages.English;
             string? language = null;
-            
+
             TranslationInfoModel translationInfoModel = new()
             {
                 Phrase = phrase,

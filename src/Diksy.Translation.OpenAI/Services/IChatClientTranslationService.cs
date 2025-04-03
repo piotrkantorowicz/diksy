@@ -2,7 +2,7 @@ using OpenAI.Chat;
 
 namespace Diksy.Translation.OpenAI.Services
 {
-    public interface IClientTranslationService
+    public interface IChatTranslationService
     {
         Task<ChatMessageContent> TranslateAsync(
             string prompt,

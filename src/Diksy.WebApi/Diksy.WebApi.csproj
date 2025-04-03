@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
-        <UserSecretsId>4ddcd890-ed7d-46b0-911f-fa3aa9970856</UserSecretsId>
+<!--        <UserSecretsId>4ddcd890-ed7d-46b0-911f-fa3aa9970856</UserSecretsId>-->
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
-        <PackageReference Include="NSwag.AspNetCore" Version="14.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3"/>
+        <PackageReference Include="NSwag.AspNetCore" Version="14.3.0"/>
     </ItemGroup>
 
     <ItemGroup>

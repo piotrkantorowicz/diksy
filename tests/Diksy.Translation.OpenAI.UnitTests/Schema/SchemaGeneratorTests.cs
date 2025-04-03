@@ -33,7 +33,7 @@ namespace Diksy.Translation.OpenAI.UnitTests.Schema
             string schema = _schemaGenerator.GenerateSchema<TranslationInfo>(_requiredProperties);
 
             // Assert
-            AssertRequiredPropertiesToContain(schema, _requiredProperties);
+            AssertRequiredPropertiesToContain(schema: schema, requiredProperties: _requiredProperties);
         }
 
         [Test]
