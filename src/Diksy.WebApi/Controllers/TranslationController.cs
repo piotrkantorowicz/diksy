@@ -12,9 +12,9 @@ namespace Diksy.WebApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [EnableRateLimiting("translation")]
-    [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status429TooManyRequests)]
     public class TranslationController(ITranslationService translationService, ILogger<TranslationController> logger)
         : ControllerBase
     {
@@ -41,9 +41,9 @@ namespace Diksy.WebApi.Controllers
         /// <response code="400">If the request is invalid or translation fails</response>
         /// <response code="500">If there was an internal server error</response>
         [HttpPost]
-        [ProducesResponseType(type: typeof(TranslationResponse), statusCode: StatusCodes.Status200OK)]
-        [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(TranslationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Translate([FromBody] TranslationRequest request)
         {
             if (!ModelState.IsValid)
@@ -54,29 +54,29 @@ namespace Diksy.WebApi.Controllers
                     Detail = "One or more validation errors occurred.",
                     Status = StatusCodes.Status400BadRequest,
                     Errors = ModelState.ToDictionary(
-                        keySelector: kvp => kvp.Key,
-                        elementSelector: kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray() ?? []
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray() ?? []
                     )
                 });
             }
 
             TranslationResponse result = await _translationService.TranslateAsync(
-                phrase: request.Phrase,
-                model: request.Model,
-                language: request.Language,
-                cancellationToken: HttpContext?.RequestAborted ?? CancellationToken.None);
+                request.Phrase,
+                request.Model,
+                request.Language,
+                HttpContext?.RequestAborted ?? CancellationToken.None);
 
             if (result.Success)
             {
                 return Ok(result);
             }
 
-            return StatusCode(statusCode: StatusCodes.Status500InternalServerError,
-                value: new ApiProblemDetails
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new ApiProblemDetails
                 {
                     Title = "Translation Error",
                     Detail = result.Errors != null && result.Errors.Any()
-                        ? string.Join(separator: "; ", values: result.Errors)
+                        ? string.Join("; ", result.Errors)
                         : "An unexpected error occurred during translation.",
                     Status = StatusCodes.Status500InternalServerError
                 });

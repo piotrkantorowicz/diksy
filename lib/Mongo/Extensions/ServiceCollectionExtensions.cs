@@ -44,7 +44,7 @@ namespace Mongo.Extensions
             services.AddScoped<IMongoRepository<TDocument>>(provider =>
             {
                 MongoDbContext context = provider.GetRequiredService<MongoDbContext>();
-                return new MongoRepository<TDocument>(context: context, collectionName: collectionName);
+                return new MongoRepository<TDocument>(context, collectionName);
             });
 
             return services;
