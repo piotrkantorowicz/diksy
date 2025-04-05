@@ -1,0 +1,22 @@
+# Ignore bin and obj folders
+**/bin/
+**/obj/
+**/out/
+
+# Ignore user-specific files
+**/.vs/
+**/*.user
+**/*.suo
+**/*.vscode/
+**/*.csproj.user
+
+# Ignore build and publish artifacts
+**/publish/
+**/node_modules/
+**/packages/
+
+# Ignore logs and temp files
+**/*.log
+**/logs/
+**/temp/
+**/tmp/

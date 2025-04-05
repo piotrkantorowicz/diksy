@@ -10,11 +10,11 @@ using System.Text.Json;
 namespace Diksy.Translation.OpenAI
 {
     internal sealed class OpenAiTranslator(
-        IClientTranslationService chatClientTranslationService,
+        IChatTranslationService chatChatTranslationService,
         ISchemaGenerator schemaGenerator) : ITranslator
     {
-        private readonly IClientTranslationService _chatClientTranslationService =
-            chatClientTranslationService ?? throw new ArgumentNullException(nameof(chatClientTranslationService));
+        private readonly IChatTranslationService _chatChatTranslationService =
+            chatChatTranslationService ?? throw new ArgumentNullException(nameof(chatChatTranslationService));
 
         private readonly ISchemaGenerator _schemaGenerator =
             schemaGenerator ?? throw new ArgumentNullException(nameof(schemaGenerator));
@@ -56,7 +56,7 @@ namespace Diksy.Translation.OpenAI
                 .ToString();
 
             ChatMessageContent openAiResponse =
-                await _chatClientTranslationService.TranslateAsync(prompt: prompt, model: model,
+                await _chatChatTranslationService.TranslateAsync(prompt: prompt, model: model,
                     options: chatCompletionOptions,
                     cancellationToken: cancellationToken);
 

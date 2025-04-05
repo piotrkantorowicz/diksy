@@ -1,6 +1,5 @@
-using Diksy.Translation.OpenAI;
 using Diksy.Translation.OpenAI.Extensions;
-using Diksy.WebApi.Services;
+using Diksy.WebApi.Extensions;
 using Microsoft.AspNetCore.RateLimiting;
 using NSwag;
 using System.Threading.RateLimiting;
@@ -32,14 +31,8 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-OpenAiSettings openAiSettings = builder.Configuration.GetSection("OpenAI").Get<OpenAiSettings>()
-                                ?? new OpenAiSettings(
-                                    ApiKey: builder.Configuration["OpenAI:ApiKey"] ??
-                                            throw new InvalidOperationException("OpenAI API key is not configured."),
-                                    DefaultModel: builder.Configuration["OpenAI:DefaultModel"] ?? "gpt-4o");
-
-builder.Services.AddOpenAiTranslator(openAiSettings);
-builder.Services.AddScoped<ITranslationService, TranslationService>();
+builder.Services.AddOpenAiTranslator(builder.Configuration);
+builder.Services.AddApiDependencies();
 
 WebApplication app = builder.Build();
 

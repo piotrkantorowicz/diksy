@@ -39,6 +39,7 @@ A modern web API service that provides translation capabilities using OpenAI's l
 1. Clone the repository
 2. Navigate to the `Diksy.WebApi` directory
 3. Update `appsettings.json` with your OpenAI API key:
+
 ```json
 {
   "OpenAI": {
@@ -63,6 +64,7 @@ dotnet run
 ```
 
 The API will be available at:
+
 - Swagger UI: https://localhost:5001/swagger
 - ReDoc: https://localhost:5001/redoc
 
@@ -116,6 +118,7 @@ Content-Type: application/json
 ## Development
 
 The project uses:
+
 - EditorConfig for consistent code style
 - NSwag for API documentation
 - Dependency Injection

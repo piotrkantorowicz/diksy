@@ -1,5 +1,4 @@
-﻿﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{342966C6-F6CE-42FB-AA76-6F49D3E84A94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.Translation", "src\Diksy.Translation\Diksy.Translation.csproj", "{EBC53501-C1CF-4CAC-ACE6-88E1B62EAC4A}"
@@ -13,6 +12,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.Translation.OpenAI.UnitTests", "tests\Diksy.Translation.OpenAI.UnitTests\Diksy.Translation.OpenAI.UnitTests.csproj", "{3D6A4D1B-61ED-4E11-8CBA-5E311BCE13A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diksy.WebApi.UnitTests", "tests\Diksy.WebApi.UnitTests\Diksy.WebApi.UnitTests.csproj", "{20C92461-AA3D-44F7-A4CA-A12FF251E316}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{EE444ED4-5F5B-453D-88DB-2AEE8917F360}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Dockerfile = Dockerfile
+		tests.runsettings = tests.runsettings
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
