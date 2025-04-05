@@ -34,8 +34,6 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddOpenAiTranslator(builder.Configuration);
 builder.Services.AddApiDependencies();
 
-IConfigurationSection section = builder.Configuration.GetSection("OpenAI");
-
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
