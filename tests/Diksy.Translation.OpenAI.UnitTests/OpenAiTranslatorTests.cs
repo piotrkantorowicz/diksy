@@ -42,7 +42,7 @@ namespace Diksy.Translation.OpenAI.UnitTests
                 .ReturnsAsync(new ChatMessageContent(expectedJsonResponse));
 
             // Act
-            TranslationInfo result = await _translator.TranslateAsync(word: "Hello", model: "gpt-4o",
+            TranslationInfo result = await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o",
                 language: "Spanish", cancellationToken: It.IsAny<CancellationToken>());
 
             // Assert
@@ -64,7 +64,7 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act & Assert
             await Should.ThrowAsync<TranslationException>(async () =>
-                await _translator.TranslateAsync(word: "Hello", model: "gpt-4o", language: "Spanish",
+                await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o", language: "Spanish",
                     cancellationToken: It.IsAny<CancellationToken>()));
         }
 
@@ -78,7 +78,7 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act & Assert
             await Should.ThrowAsync<TranslationException>(async () =>
-                await _translator.TranslateAsync(word: "Hello", model: "gpt-4o", language: "Spanish",
+                await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o", language: "Spanish",
                     cancellationToken: It.IsAny<CancellationToken>()));
         }
     }
