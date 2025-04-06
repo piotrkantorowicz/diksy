@@ -38,7 +38,7 @@ namespace Diksy.WebApi.Services
                     await _translator.TranslateAsync(phrase: phrase, model: defaultModel, language: defaultLanguage,
                         cancellationToken: cancellationToken);
 
-                TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo: translationInfo);
+                TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo);
 
                 _logger.LogInformation(message: "Successfully translated phrase: {Phrase} to {Translation}",
                     phrase, translationInfoDto.Translation);

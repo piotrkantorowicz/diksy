@@ -19,7 +19,6 @@ namespace Diksy.Translation.OpenAI.Services
             ChatCompletionOptions options, CancellationToken cancellationToken = default)
         {
             string modelToUse = model ?? _openAiOptions.Value.DefaultModel ?? AllowedModels.Gpt4O;
-            ;
             ChatClient? chatClient = _openAiFactory.CreateClient().GetChatClient(modelToUse);
 
             try
