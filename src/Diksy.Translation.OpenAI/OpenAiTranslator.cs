@@ -36,8 +36,8 @@ namespace Diksy.Translation.OpenAI
             {
                 Temperature = 0.15f,
                 ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
-                    "TranslatorResponse",
-                    BinaryData.FromString(jsonSchema),
+                    jsonSchemaFormatName: "TranslatorResponse",
+                    jsonSchema: BinaryData.FromString(jsonSchema),
                     jsonSchemaIsStrict: true)
             };
 
@@ -81,8 +81,8 @@ namespace Diksy.Translation.OpenAI
             }
             catch (JsonException jsonException)
             {
-                throw new TranslationException("Unable to deserialize translation response",
-                    jsonException);
+                throw new TranslationException(message: "Unable to deserialize translation response",
+                    innerException: jsonException);
             }
         }
     }

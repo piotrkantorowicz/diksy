@@ -12,7 +12,13 @@ namespace Diksy.Translation.History
             services.AddScoped<ITranslationHistoryService, TranslationHistoryService>();
             services.AddScoped<IMongoCollection<TranslationHistoryEntry>>(sp =>
             {
-                IMongoDatabase database = sp.GetRequiredService<IMongoDatabase>();
+                IMongoDatabase? database = sp.GetService<IMongoDatabase>();
+
+                if (database == null)
+                {
+                    throw new InvalidOperationException("MongoDB database is not registered in the service provider.");
+                }
+
                 return database.GetCollection<TranslationHistoryEntry>(CollectionNames.TranslationHistory);
             });
             return services;

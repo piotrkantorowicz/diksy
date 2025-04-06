@@ -24,9 +24,9 @@ namespace Diksy.Translation.OpenAI.Services
             try
             {
                 ClientResult<ChatCompletion>? openAiResponse = await chatClient.CompleteChatAsync(
-                                                                   [prompt],
-                                                                   options,
-                                                                   cancellationToken) ??
+                                                                   messages: [prompt],
+                                                                   options: options,
+                                                                   cancellationToken: cancellationToken) ??
                                                                throw new TranslationException(
                                                                    "Translation response is empty");
 
@@ -34,8 +34,8 @@ namespace Diksy.Translation.OpenAI.Services
             }
             catch (Exception ex) when (ex is not TranslationException)
             {
-                throw new TranslationException($"Failed to translate using model {modelToUse}",
-                    ex);
+                throw new TranslationException(message: $"Failed to translate using model {modelToUse}",
+                    innerException: ex);
             }
         }
     }

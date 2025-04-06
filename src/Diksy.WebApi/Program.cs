@@ -22,7 +22,7 @@ builder.Services.AddOpenApiDocument(config =>
 
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("translation", config =>
+    options.AddFixedWindowLimiter(policyName: "translation", configureOptions: config =>
     {
         config.Window = TimeSpan.FromMinutes(1);
         config.PermitLimit = 20;

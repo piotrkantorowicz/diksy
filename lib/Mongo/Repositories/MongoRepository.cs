@@ -17,6 +17,9 @@ namespace Mongo.Repositories
         /// <param name="collectionName">The name of the collection.</param>
         public MongoRepository(MongoDbContext context, string collectionName)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(collectionName);
+
             Collection = context.GetCollection<TDocument>(collectionName);
         }
 
@@ -42,24 +45,24 @@ namespace Mongo.Repositories
         /// <inheritdoc />
         public async Task InsertOneAsync(TDocument document, CancellationToken cancellationToken = default)
         {
-            await Collection.InsertOneAsync(document, new InsertOneOptions(),
-                cancellationToken);
+            await Collection.InsertOneAsync(document: document, options: new InsertOneOptions(),
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task InsertManyAsync(IEnumerable<TDocument> documents,
             CancellationToken cancellationToken = default)
         {
-            await Collection.InsertManyAsync(documents, new InsertManyOptions(),
-                cancellationToken);
+            await Collection.InsertManyAsync(documents: documents, options: new InsertManyOptions(),
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<ReplaceOneResult> ReplaceOneAsync(Expression<Func<TDocument, bool>> filter,
             TDocument document, ReplaceOptions? options = null, CancellationToken cancellationToken = default)
         {
-            return await Collection.ReplaceOneAsync(filter, document, options,
-                cancellationToken);
+            return await Collection.ReplaceOneAsync(filter: filter, replacement: document, options: options,
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
@@ -67,22 +70,22 @@ namespace Mongo.Repositories
             UpdateDefinition<TDocument> update, UpdateOptions? options = null,
             CancellationToken cancellationToken = default)
         {
-            return await Collection.UpdateOneAsync(filter, update, options,
-                cancellationToken);
+            return await Collection.UpdateOneAsync(filter: filter, update: update, options: options,
+                cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<DeleteResult> DeleteOneAsync(Expression<Func<TDocument, bool>> filter,
             CancellationToken cancellationToken = default)
         {
-            return await Collection.DeleteOneAsync(filter, cancellationToken);
+            return await Collection.DeleteOneAsync(filter: filter, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<DeleteResult> DeleteManyAsync(Expression<Func<TDocument, bool>> filter,
             CancellationToken cancellationToken = default)
         {
-            return await Collection.DeleteManyAsync(filter, cancellationToken);
+            return await Collection.DeleteManyAsync(filter: filter, cancellationToken: cancellationToken);
         }
     }
 }

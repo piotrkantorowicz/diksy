@@ -42,12 +42,13 @@ namespace Diksy.Translation.History.Services
                 TargetLanguage = targetLanguage
             };
 
-            await _collection.InsertOneAsync(entry, new InsertOneOptions(), cancellationToken);
+            await _collection.InsertOneAsync(document: entry, options: new InsertOneOptions(),
+                cancellationToken: cancellationToken);
         }
 
         public async Task DeleteTranslationAsync(string id, CancellationToken cancellationToken)
         {
-            await _collection.DeleteOneAsync(x => x.Id == id, cancellationToken);
+            await _collection.DeleteOneAsync(filter: x => x.Id == id, cancellationToken: cancellationToken);
         }
 
         private static FilterDefinition<TranslationHistoryEntry> BuildFilter(TranslationHistoryFilter filter)
@@ -57,27 +58,27 @@ namespace Diksy.Translation.History.Services
 
             if (!string.IsNullOrEmpty(filter.UserId))
             {
-                filters.Add(builder.Eq(x => x.UserId, filter.UserId));
+                filters.Add(builder.Eq(field: x => x.UserId, value: filter.UserId));
             }
 
             if (!string.IsNullOrEmpty(filter.SourceLanguage))
             {
-                filters.Add(builder.Eq(x => x.SourceLanguage, filter.SourceLanguage));
+                filters.Add(builder.Eq(field: x => x.SourceLanguage, value: filter.SourceLanguage));
             }
 
             if (!string.IsNullOrEmpty(filter.TargetLanguage))
             {
-                filters.Add(builder.Eq(x => x.TargetLanguage, filter.TargetLanguage));
+                filters.Add(builder.Eq(field: x => x.TargetLanguage, value: filter.TargetLanguage));
             }
 
             if (filter.FromDate.HasValue)
             {
-                filters.Add(builder.Gte(x => x.CreatedAt, filter.FromDate.Value));
+                filters.Add(builder.Gte(field: x => x.CreatedAt, value: filter.FromDate.Value));
             }
 
             if (filter.ToDate.HasValue)
             {
-                filters.Add(builder.Lte(x => x.CreatedAt, filter.ToDate.Value));
+                filters.Add(builder.Lte(field: x => x.CreatedAt, value: filter.ToDate.Value));
             }
 
             return filters.Count > 0

@@ -1,9 +1,9 @@
-namespace Mongo.Settings
+namespace Mongo.Options
 {
     /// <summary>
     ///     Represents the configuration settings for MongoDB.
     /// </summary>
-    public class MongoDbSettings
+    public class MongoDbOptions
     {
         /// <summary>
         ///     The connection string for the MongoDB server.

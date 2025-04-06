@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using Mongo.Settings;
+using Mongo.Options;
 using MongoDB.Driver;
 
 namespace Mongo.Database
@@ -16,13 +16,13 @@ namespace Mongo.Database
         /// <summary>
         ///     Initializes a new instance of the <see cref="MongoDbContext" /> class.
         /// </summary>
-        /// <param name="settings">The MongoDB connection settings.</param>
-        public MongoDbContext(IOptions<MongoDbSettings> settings)
+        /// <param name="options">The MongoDB connection settings.</param>
+        public MongoDbContext(IOptions<MongoDbOptions> options)
         {
-            MongoDbSettings mongoSettings = settings.Value;
+            MongoDbOptions mongoDbOptions = options.Value ?? throw new ArgumentNullException(nameof(options));
 
-            _client = new MongoClient(mongoSettings.ConnectionString);
-            _database = _client.GetDatabase(mongoSettings.DatabaseName);
+            _client = new MongoClient(mongoDbOptions.ConnectionString);
+            _database = _client.GetDatabase(mongoDbOptions.DatabaseName);
         }
 
         /// <summary>

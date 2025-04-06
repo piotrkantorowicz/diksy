@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mongo.Database;
+using Mongo.Options;
 using Mongo.Repositories;
-using Mongo.Settings;
 
 namespace Mongo.Extensions
 {
@@ -16,14 +16,14 @@ namespace Mongo.Extensions
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection" /> to add services to.</param>
         /// <param name="configuration">The configuration instance.</param>
-        /// <param name="sectionName">The configuration section name for MongoDB settings. Default is "MongoDb".</param>
+        /// <param name="sectionName">The configuration section name for MongoDB options. Default is "MongoDb".</param>
         /// <returns>The same service collection so that multiple calls can be chained.</returns>
         public static IServiceCollection AddMongo(
             this IServiceCollection services,
             IConfiguration configuration,
             string sectionName = "MongoDb")
         {
-            services.Configure<MongoDbSettings>(configuration.GetSection(sectionName));
+            services.Configure<MongoDbOptions>(configuration.GetSection(sectionName));
             services.AddSingleton<MongoDbContext>();
 
             return services;
@@ -44,7 +44,7 @@ namespace Mongo.Extensions
             services.AddScoped<IMongoRepository<TDocument>>(provider =>
             {
                 MongoDbContext context = provider.GetRequiredService<MongoDbContext>();
-                return new MongoRepository<TDocument>(context, collectionName);
+                return new MongoRepository<TDocument>(context: context, collectionName: collectionName);
             });
 
             return services;

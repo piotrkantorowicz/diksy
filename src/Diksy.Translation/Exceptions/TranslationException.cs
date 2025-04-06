@@ -6,8 +6,8 @@ namespace Diksy.Translation.Exceptions
         {
         }
 
-        public TranslationException(string message, Exception innerException) : base(message,
-            innerException)
+        public TranslationException(string message, Exception innerException) : base(message: message,
+            innerException: innerException)
         {
         }
     }
