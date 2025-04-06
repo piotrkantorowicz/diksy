@@ -33,6 +33,7 @@ A modern web API service that provides translation capabilities using OpenAI's l
 
 - .NET 9.0 SDK
 - OpenAI API key
+- Docker (optional, for containerized deployment)
 
 ## Configuration
 
@@ -51,6 +52,8 @@ A modern web API service that provides translation capabilities using OpenAI's l
 
 ## Running the Application
 
+### Local Development
+
 ```bash
 # Restore dependencies
 dotnet restore
@@ -59,14 +62,30 @@ dotnet restore
 dotnet build
 
 # Run the application
-cd Diksy.WebApi
-dotnet run
+dotnet run --project src/Diksy.WebApi --urls="http://localhost:5000"
 ```
 
 The API will be available at:
 
-- Swagger UI: https://localhost:5001/swagger
-- ReDoc: https://localhost:5001/redoc
+- Swagger UI: <https://localhost:5000/swagger>
+- ReDoc: <https://localhost:5000/redoc>
+
+### Using Docker
+
+Build and run the application using Docker:
+
+```bash
+# Build the Docker image
+docker build -t diksy:latest .
+
+# Run the container on port 5000
+docker run -d -p 5000:80 -e "OpenAI__ApiKey=your-api-key-here" -e "ASPNETCORE_ENVIRONMENT=Development" --name diksy-api diksy:latest
+```
+
+The Docker container will expose the API on port 5000:
+
+- Swagger UI: <http://localhost:5000/swagger>
+- ReDoc: <http://localhost:5000/redoc>
 
 ## Running Tests
 
@@ -129,4 +148,4 @@ The project uses:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details. 
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
