@@ -67,8 +67,8 @@ dotnet run --project src/Diksy.WebApi --urls="http://localhost:5000"
 
 The API will be available at:
 
-- Swagger UI: https://localhost:5000/swagger
-- ReDoc: https://localhost:5000/redoc
+- Swagger UI: <https://localhost:5000/swagger>
+- ReDoc: <https://localhost:5000/redoc>
 
 ### Using Docker
 
@@ -83,8 +83,9 @@ docker run -d -p 5000:80 -e "OpenAI__ApiKey=your-api-key-here" -e "ASPNETCORE_EN
 ```
 
 The Docker container will expose the API on port 5000:
-- Swagger UI: http://localhost:5000/swagger
-- ReDoc: http://localhost:5000/redoc
+
+- Swagger UI: <http://localhost:5000/swagger>
+- ReDoc: <http://localhost:5000/redoc>
 
 ## Running Tests
 
