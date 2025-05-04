@@ -57,7 +57,7 @@ namespace Diksy.WebApi.UnitTests.Services
                 Transcription = "həˈloʊ",
                 Example = "Hola, ¿cómo estás?",
                 TranslationOfExample = "Hello, how are you?",
-                SourceLanguage = targetLanguage,
+                SourceLanguage = sourceLanguage,
                 TargetLanguage = targetLanguage
             };
 
