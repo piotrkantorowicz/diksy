@@ -24,6 +24,8 @@ namespace Mongo.Extensions
             IConfiguration configuration,
             string sectionName = "MongoDb")
         {
+            ArgumentNullException.ThrowIfNull(configuration);
+
             IConfigurationSection mongoDbOptionsSection = configuration.GetSection(sectionName);
 
             services.Configure<MongoDbOptions>(mongoDbOptionsSection);
@@ -46,10 +48,13 @@ namespace Mongo.Extensions
             string collectionName)
             where TDocument : class
         {
+            ArgumentNullException.ThrowIfNull(database);
+            ArgumentNullException.ThrowIfNull(collectionName);
+
             services.AddScoped<IMongoRepository<TDocument>>(provider =>
             {
                 MongoDbContext context = provider.GetRequiredService<MongoDbContext>();
-                
+
                 return new MongoRepository<TDocument>(context: context, database: database,
                     collectionName: collectionName);
             });

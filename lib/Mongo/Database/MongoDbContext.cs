@@ -32,24 +32,40 @@ namespace Mongo.Database
         ///     Gets a MongoDB collection with the specified name and document type.
         /// </summary>
         /// <typeparam name="TDocument">The type of the documents stored in the collection.</typeparam>
-        /// <param name="database">The name of the database.</param>
+        /// <param name="databaseName">The name of the database.</param>
         /// <param name="collectionName">The name of the collection.</param>
         /// <returns>An IMongoCollection instance representing the collection.</returns>
-        public IMongoCollection<TDocument> GetCollection<TDocument>(string database, string collectionName)
+        public IMongoCollection<TDocument> GetCollection<TDocument>(string databaseName, string collectionName)
         {
+            ArgumentNullException.ThrowIfNull(databaseName);
             ArgumentNullException.ThrowIfNull(collectionName);
 
-            return _databases[database].GetCollection<TDocument>(collectionName);
+            if (!_databases.TryGetValue(databaseName, out IMongoDatabase? database))
+
+            {
+                throw new KeyNotFoundException(
+                    $"Database '{databaseName}' not found. Available databases: {string.Join(", ", _databases.Keys)}");
+            }
+
+            return database.GetCollection<TDocument>(collectionName);
         }
 
         /// <summary>
         ///     Gets the MongoDB database.
         /// </summary>
-        /// <param name="database">The name of the database.</param>
+        /// <param name="databaseName">The name of the database.</param>
         /// <returns>The MongoDB database instance.</returns>
-        public IMongoDatabase GetDatabase(string database)
+        public IMongoDatabase GetDatabase(string databaseName)
         {
-            return _databases[database];
+            ArgumentNullException.ThrowIfNull(databaseName);
+
+            if (!_databases.TryGetValue(databaseName, out IMongoDatabase? database))
+            {
+                throw new KeyNotFoundException(
+                    $"Database '{database}' not found. Available databases: {string.Join(", ", _databases.Keys)}");
+            }
+
+            return database;
         }
 
         /// <summary>

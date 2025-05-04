@@ -50,7 +50,7 @@ namespace Diksy.Translation.OpenAI
                 stringBuilder.Append($"from {sourceLanguage} ");
             }
 
-            stringBuilder.Append($"from {sourceLanguage}.")
+            stringBuilder
                 .Append($"into {targetLanguage}.")
                 .AppendLine()
                 .AppendLine("Please provide:")

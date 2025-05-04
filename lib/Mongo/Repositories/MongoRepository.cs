@@ -34,6 +34,8 @@ namespace Mongo.Repositories
             IDictionary<string, bool>? sortFields = null,
             CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             IFindFluent<TDocument, TDocument>? findOperation = Collection.Find(filter);
 
             if (sortFields is { Count: > 0 })
@@ -49,6 +51,8 @@ namespace Mongo.Repositories
             IDictionary<string, bool>? sortFields = null,
             CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             IFindFluent<TDocument, TDocument>? findOperation = Collection.Find(filter);
 
             if (sortFields is { Count: > 0 })
@@ -62,6 +66,8 @@ namespace Mongo.Repositories
         /// <inheritdoc />
         public async Task InsertOneAsync(TDocument document, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(document);
+
             await Collection.InsertOneAsync(document: document, options: new InsertOneOptions(),
                 cancellationToken: cancellationToken);
         }
@@ -70,6 +76,8 @@ namespace Mongo.Repositories
         public async Task InsertManyAsync(IEnumerable<TDocument> documents,
             CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(documents);
+
             await Collection.InsertManyAsync(documents: documents, options: new InsertManyOptions(),
                 cancellationToken: cancellationToken);
         }
@@ -78,6 +86,9 @@ namespace Mongo.Repositories
         public async Task<ReplaceOneResult> ReplaceOneAsync(Expression<Func<TDocument, bool>> filter,
             TDocument document, ReplaceOptions? options = null, CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(document);
+            ArgumentNullException.ThrowIfNull(filter);
+
             return await Collection.ReplaceOneAsync(filter: filter, replacement: document, options: options,
                 cancellationToken: cancellationToken);
         }
@@ -87,6 +98,9 @@ namespace Mongo.Repositories
             UpdateDefinition<TDocument> update, UpdateOptions? options = null,
             CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(update);
+            ArgumentNullException.ThrowIfNull(filter);
+
             return await Collection.UpdateOneAsync(filter: filter, update: update, options: options,
                 cancellationToken: cancellationToken);
         }
@@ -95,6 +109,8 @@ namespace Mongo.Repositories
         public async Task<DeleteResult> DeleteOneAsync(Expression<Func<TDocument, bool>> filter,
             CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             return await Collection.DeleteOneAsync(filter: filter, cancellationToken: cancellationToken);
         }
 
@@ -102,6 +118,8 @@ namespace Mongo.Repositories
         public async Task<DeleteResult> DeleteManyAsync(Expression<Func<TDocument, bool>> filter,
             CancellationToken cancellationToken = default)
         {
+            ArgumentNullException.ThrowIfNull(filter);
+
             return await Collection.DeleteManyAsync(filter: filter, cancellationToken: cancellationToken);
         }
 
