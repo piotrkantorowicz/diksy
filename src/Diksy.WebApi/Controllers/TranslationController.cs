@@ -11,7 +11,7 @@ namespace Diksy.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [EnableRateLimiting("translation")]
+    [EnableRateLimiting("default")]
     [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status400BadRequest)]
     [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status429TooManyRequests)]

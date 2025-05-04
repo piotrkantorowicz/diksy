@@ -9,13 +9,11 @@ namespace Diksy.Translation.OpenAI.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        private const string DefaultOpenAiSectionName = "OpenAI";
-
         public static IServiceCollection AddOpenAiTranslator(this IServiceCollection services,
-            IConfiguration configuration, string? sectionName = null)
+            IConfiguration configuration, string sectionName)
         {
             services.AddOptions<OpenAiOptions>()
-                .Bind(configuration.GetSection(sectionName ?? DefaultOpenAiSectionName))
+                .Bind(configuration.GetSection(sectionName))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 

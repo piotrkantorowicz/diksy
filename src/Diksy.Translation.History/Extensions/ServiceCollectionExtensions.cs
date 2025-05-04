@@ -12,13 +12,13 @@ namespace Diksy.Translation.History.Extensions
         private const string DefaultDatabaseName = "diksy";
 
         public static IServiceCollection AddTranslationHistory(this IServiceCollection services,
-            IConfiguration configuration, string mongoDbSectionName = "MongoDb")
+            IConfiguration configuration, string sectionName)
         {
             services.AddScoped<ITranslationHistoryService, TranslationHistoryService>();
 
-            services.AddMongo(configuration, mongoDbSectionName);
+            services.AddMongo(configuration, sectionName);
 
-            IConfigurationSection mongoDbOptionsSection = configuration.GetSection(mongoDbSectionName);
+            IConfigurationSection mongoDbOptionsSection = configuration.GetSection(sectionName);
             MongoDbOptions mongoDbOptions = mongoDbOptionsSection.Get<MongoDbOptions>() ?? new MongoDbOptions();
 
             services.AddMongoRepository<TranslationHistoryEntry>(

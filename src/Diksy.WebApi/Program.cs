@@ -1,8 +1,10 @@
 using Diksy.Translation.OpenAI.Extensions;
 using Diksy.WebApi.Extensions;
 using Diksy.Translation.History.Extensions;
+using Diksy.WebApi.Settings;
 using Mongo.Extensions;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Options;
 using NSwag;
 using System.Threading.RateLimiting;
 
@@ -10,32 +12,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddOpenApiDocument(config =>
-{
-    config.PostProcess = document =>
-    {
-        document.Info.Version = "v1";
-        document.Info.Title = "Diksy Translation API";
-        document.Info.Description = "API for translating phrases using AI";
-        document.Info.Contact = new OpenApiContact { Name = "Support", Email = "support@diksy.com" };
-    };
-});
-
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter(policyName: "translation", configureOptions: config =>
-    {
-        config.Window = TimeSpan.FromMinutes(1);
-        config.PermitLimit = 20;
-        config.QueueLimit = 10;
-        config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-    });
-});
-
-builder.Services.AddOpenAiTranslator(builder.Configuration);
-builder.Services.AddTranslationHistory(builder.Configuration);
-builder.Services.AddApiDependencies();
+builder.Services.AddOpenAiTranslator(builder.Configuration, ConfigurationSections.OpenAi);
+builder.Services.AddTranslationHistory(builder.Configuration, ConfigurationSections.Mongo);
+builder.Services.AddApiDependencies(builder.Configuration);
 
 WebApplication app = builder.Build();
 
@@ -47,6 +26,13 @@ if (app.Environment.IsDevelopment())
     {
         config.Path = "/redoc";
     });
+}
+
+IOptions<RateLimitingOptions> rateLimiterOptions = app.Services.GetRequiredService<IOptions<RateLimitingOptions>>();
+
+if (rateLimiterOptions.Value.Enabled)
+{
+    app.UseRateLimiter();
 }
 
 app.UseHttpsRedirection();
