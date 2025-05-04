@@ -11,7 +11,7 @@ namespace Mongo.Database
     public class MongoDbContext
     {
         private readonly MongoClient _client;
-        private readonly IMongoDatabase _database;
+        private readonly IDictionary<string, IMongoDatabase> _databases;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MongoDbContext" /> class.
@@ -19,30 +19,37 @@ namespace Mongo.Database
         /// <param name="options">The MongoDB connection settings.</param>
         public MongoDbContext(IOptions<MongoDbOptions> options)
         {
-            MongoDbOptions mongoDbOptions = options.Value ?? throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
-            _client = new MongoClient(mongoDbOptions.ConnectionString);
-            _database = _client.GetDatabase(mongoDbOptions.DatabaseName);
+            _client = new MongoClient(options.Value.ConnectionString);
+
+            _databases = options.Value.Databases.ToDictionary(
+                dbName => dbName,
+                dbName => _client.GetDatabase(dbName));
         }
 
         /// <summary>
         ///     Gets a MongoDB collection with the specified name and document type.
         /// </summary>
         /// <typeparam name="TDocument">The type of the documents stored in the collection.</typeparam>
+        /// <param name="database">The name of the database.</param>
         /// <param name="collectionName">The name of the collection.</param>
         /// <returns>An IMongoCollection instance representing the collection.</returns>
-        public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName)
+        public IMongoCollection<TDocument> GetCollection<TDocument>(string database, string collectionName)
         {
-            return _database.GetCollection<TDocument>(collectionName);
+            ArgumentNullException.ThrowIfNull(collectionName);
+
+            return _databases[database].GetCollection<TDocument>(collectionName);
         }
 
         /// <summary>
         ///     Gets the MongoDB database.
         /// </summary>
+        /// <param name="database">The name of the database.</param>
         /// <returns>The MongoDB database instance.</returns>
-        public IMongoDatabase GetDatabase()
+        public IMongoDatabase GetDatabase(string database)
         {
-            return _database;
+            return _databases[database];
         }
 
         /// <summary>

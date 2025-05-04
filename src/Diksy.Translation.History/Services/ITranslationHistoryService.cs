@@ -11,8 +11,7 @@ namespace Diksy.Translation.History.Services
         Task<IEnumerable<TranslationHistoryEntry>> GetTranslationHistoryAsync(TranslationHistoryFilter filter,
             CancellationToken cancellationToken);
 
-        Task SaveTranslationAsync(TranslationInfo translation, string userId, string sourceLanguage,
-            string targetLanguage, CancellationToken cancellationToken);
+        Task SaveTranslationAsync(TranslationInfo translation, string userId, CancellationToken cancellationToken);
 
         Task DeleteTranslationAsync(string id, CancellationToken cancellationToken);
     }

@@ -8,18 +8,30 @@ namespace Mongo.Options
         /// <summary>
         ///     The connection string for the MongoDB server.
         /// </summary>
-        public string ConnectionString =>
-            $"mongodb://{(string.IsNullOrEmpty(Username) ? "" : $"{Username}:{Password}@")}{Host}:{Port}";
+        public string ConnectionString
+        {
+            get
+            {
+                string optionsString = Options.Any()
+                    ? "?" + string.Join("&", Options.Select(kvp => $"{kvp.Key}={kvp.Value}"))
+                    : string.Empty;
+
+                string prefix = string.IsNullOrEmpty(HostSuffix) ? "mongodb" : "mongodb+";
+                string credentials = string.IsNullOrEmpty(Username) ? string.Empty : $"{Username}:{Password}@";
+
+                return $"{prefix}{HostSuffix}://{credentials}{Host}{optionsString}";
+            }
+        }
 
         /// <summary>
         ///     The host address of the MongoDB server.
         /// </summary>
-        public string Host { get; set; } = "localhost";
+        public string Host { get; set; } = "localhost:27017";
 
         /// <summary>
-        ///     The port number of the MongoDB server.
+        ///     The host suffix for the MongoDB server. Optional.
         /// </summary>
-        public int Port { get; set; } = 27017;
+        public string? HostSuffix { get; set; }
 
         /// <summary>
         ///     The username for MongoDB authentication. Optional.
@@ -34,6 +46,11 @@ namespace Mongo.Options
         /// <summary>
         ///     The name of the MongoDB database.
         /// </summary>
-        public string? DatabaseName { get; set; }
+        public IList<string> Databases { get; set; } = [];
+
+        /// <summary>
+        /// Additional options for MongoDB connection.
+        /// </summary>
+        public IDictionary<string, string> Options { get; set; } = new Dictionary<string, string>();
     }
 }

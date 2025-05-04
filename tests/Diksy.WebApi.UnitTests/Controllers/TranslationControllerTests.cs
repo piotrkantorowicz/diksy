@@ -1,3 +1,4 @@
+using Diksy.Translation;
 using Diksy.WebApi.Controllers;
 using Diksy.WebApi.Models;
 using Diksy.WebApi.Models.Translation;
@@ -33,7 +34,10 @@ namespace Diksy.WebApi.UnitTests.Controllers
         public async Task Translate_WithValidRequest_ReturnsOkResult()
         {
             // Arrange
-            TranslationRequest request = new() { Phrase = "Hello", Model = "gpt-4o", Language = "Spanish" };
+            TranslationRequest request = new()
+            {
+                Phrase = "Hello", Model = "gpt-4o", SourceLanguage = AllowedLanguages.Spanish
+            };
 
             TranslationInfo translationInfo = new()
             {
@@ -41,13 +45,16 @@ namespace Diksy.WebApi.UnitTests.Controllers
                 Translation = "Hola",
                 Transcription = "həˈloʊ",
                 Example = "Hola, ¿cómo estás?",
-                TranslationOfExample = "Hello, how are you?"
+                TranslationOfExample = "Hello, how are you?",
+                SourceLanguage = AllowedLanguages.English,
+                TargetLanguage = AllowedLanguages.Spanish
             };
 
             TranslationResponse expectedResponse = TranslationResponse.SuccessResponse(translationInfo);
 
             _translationServiceMock.Setup(s => s.TranslateAsync(
-                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()))
+                    request.Phrase, request.Model, request.SourceLanguage, request.TargetLanguage,
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedResponse);
 
             // Act
@@ -67,7 +74,8 @@ namespace Diksy.WebApi.UnitTests.Controllers
             responseValue.Response.TranslationOfExample.ShouldBe("Hello, how are you?");
 
             _translationServiceMock.Verify(expression: s => s.TranslateAsync(
-                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
+                    request.Phrase, request.Model, request.SourceLanguage, request.TargetLanguage,
+                    It.IsAny<CancellationToken>()),
                 times: Times.Once);
         }
 
@@ -75,7 +83,10 @@ namespace Diksy.WebApi.UnitTests.Controllers
         public async Task Translate_WithInvalidRequest_ReturnsBadRequest()
         {
             // Arrange
-            TranslationRequest request = new() { Phrase = "Hi", Model = "gpt-4o", Language = "Spanish" };
+            TranslationRequest request = new()
+            {
+                Phrase = "Hi", Model = "gpt-4o", SourceLanguage = AllowedLanguages.Spanish
+            };
 
             _controller.ModelState.AddModelError(key: "Phrase",
                 errorMessage:
@@ -94,7 +105,8 @@ namespace Diksy.WebApi.UnitTests.Controllers
             problemDetails.Errors?.ShouldContainKey("Phrase");
 
             _translationServiceMock.Verify(expression: s => s.TranslateAsync(
-                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
+                    request.Phrase, request.Model, request.SourceLanguage, request.TargetLanguage,
+                    It.IsAny<CancellationToken>()),
                 times: Times.Never);
         }
 
@@ -102,11 +114,15 @@ namespace Diksy.WebApi.UnitTests.Controllers
         public async Task Translate_WhenTranslationFails_ReturnsInternalServerError()
         {
             // Arrange
-            TranslationRequest request = new() { Phrase = "Hello", Model = "gpt-4o", Language = "Spanish" };
+            TranslationRequest request = new()
+            {
+                Phrase = "Hello", Model = "gpt-4o", SourceLanguage = AllowedLanguages.Spanish
+            };
             TranslationResponse failedResponse = new() { Success = false, Errors = ["Translation service error"] };
 
             _translationServiceMock.Setup(s => s.TranslateAsync(
-                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()))
+                    request.Phrase, request.Model, request.SourceLanguage, request.TargetLanguage,
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(failedResponse);
 
             // Act
@@ -121,7 +137,8 @@ namespace Diksy.WebApi.UnitTests.Controllers
             problemDetails.Status.ShouldBe(StatusCodes.Status500InternalServerError);
 
             _translationServiceMock.Verify(expression: s => s.TranslateAsync(
-                    request.Phrase, request.Model, request.Language, It.IsAny<CancellationToken>()),
+                    request.Phrase, request.Model, request.SourceLanguage, request.TargetLanguage,
+                    It.IsAny<CancellationToken>()),
                 times: Times.Once);
         }
     }

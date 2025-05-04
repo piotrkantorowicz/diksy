@@ -2,6 +2,6 @@ namespace Diksy.Translation.History.Models
 {
     public static class CollectionNames
     {
-        public const string TranslationHistory = "translation_history";
+        public const string TranslationHistoryCollection = "translation_history";
     }
 }

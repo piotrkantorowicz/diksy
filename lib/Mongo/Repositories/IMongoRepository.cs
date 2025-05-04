@@ -19,18 +19,22 @@ namespace Mongo.Repositories
         ///     Finds documents that match the specified filter.
         /// </summary>
         /// <param name="filter">The filter expression.</param>
+        /// <param name="sortFields">Sort fields for the result.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A collection of documents that match the filter criteria.</returns>
         Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter,
+            IDictionary<string, bool>? sortFields = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Finds a single document that matches the specified filter.
         /// </summary>
         /// <param name="filter">The filter expression.</param>
+        /// <param name="sortFields">Sort fields for the result.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A document that matches the filter criteria, or null if no document is found.</returns>
         Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filter,
+            IDictionary<string, bool>? sortFields = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>

@@ -20,14 +20,15 @@ namespace Diksy.Translation.OpenAI
             schemaGenerator ?? throw new ArgumentNullException(nameof(schemaGenerator));
 
 
-        public async Task<TranslationInfo> TranslateAsync(string phrase, string model, string language,
-            CancellationToken cancellationToken)
+        public async Task<TranslationInfo> TranslateAsync(string phrase, string model, string? sourceLanguage,
+            string targetLanguage, CancellationToken cancellationToken)
         {
             string[] requiredProperties =
             [
                 nameof(TranslationInfo.Phrase), nameof(TranslationInfo.Translation),
                 nameof(TranslationInfo.Transcription), nameof(TranslationInfo.Example),
-                nameof(TranslationInfo.TranslationOfExample)
+                nameof(TranslationInfo.TranslationOfExample), nameof(TranslationInfo.SourceLanguage),
+                nameof(TranslationInfo.TargetLanguage)
             ];
 
             string jsonSchema = _schemaGenerator.GenerateSchema<TranslationInfo>(requiredProperties);
@@ -41,19 +42,29 @@ namespace Diksy.Translation.OpenAI
                     jsonSchemaIsStrict: true)
             };
 
-            string prompt = new StringBuilder()
-                .Append($"Translate the phrase \"{phrase}\" ")
-                .Append($"into {language}.")
+            StringBuilder stringBuilder = new StringBuilder()
+                .Append($"Translate the phrase \"{phrase}\" ");
+
+            if (!string.IsNullOrWhiteSpace(sourceLanguage))
+            {
+                stringBuilder.Append($"from {sourceLanguage} ");
+            }
+
+            stringBuilder.Append($"from {sourceLanguage}.")
+                .Append($"into {targetLanguage}.")
                 .AppendLine()
                 .AppendLine("Please provide:")
                 .AppendLine("1. Translation that captures the full meaning of the phrase/word")
                 .AppendLine("2. Phonetic transcription (for each word if it's a phrasal verb)")
                 .AppendLine("3. Example sentence showing proper usage in context")
                 .AppendLine("4. Translation of the example sentence")
+                .AppendLine("5. Source language (e.g., Polish)")
+                .AppendLine("6. Target language (e.g., English)")
                 .AppendLine()
                 .AppendLine(
-                    "Note: If this is a phrasal verb or multi-word expression, ensure the translation reflects the complete meaning rather than individual words.")
-                .ToString();
+                    "Note: If this is a phrasal verb or multi-word expression, ensure the translation reflects the complete meaning rather than individual words.");
+
+            string prompt = stringBuilder.ToString();
 
             ChatMessageContent openAiResponse =
                 await _chatChatTranslationService.TranslateAsync(prompt: prompt, model: model,

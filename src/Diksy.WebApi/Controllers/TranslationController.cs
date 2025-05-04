@@ -28,6 +28,7 @@ namespace Diksy.WebApi.Controllers
         ///     Translates a phrase to the specified language
         /// </summary>
         /// <param name="request">The translation request containing phrase, model, and target language</param>
+        /// <param name="cancellationToken">Cancellation token for async operations</param>
         /// <remarks>
         ///     Sample request:
         ///     POST /api/Translation
@@ -44,7 +45,8 @@ namespace Diksy.WebApi.Controllers
         [ProducesResponseType(type: typeof(TranslationResponse), statusCode: StatusCodes.Status200OK)]
         [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status400BadRequest)]
         [ProducesResponseType(type: typeof(ApiProblemDetails), statusCode: StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Translate([FromBody] TranslationRequest request)
+        public async Task<IActionResult> Translate([FromBody] TranslationRequest request,
+            CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -63,8 +65,9 @@ namespace Diksy.WebApi.Controllers
             TranslationResponse result = await _translationService.TranslateAsync(
                 phrase: request.Phrase,
                 model: request.Model,
-                language: request.Language,
-                cancellationToken: HttpContext?.RequestAborted ?? CancellationToken.None);
+                targetLanguage: request.TargetLanguage,
+                sourceLanguage: request.SourceLanguage,
+                cancellationToken: cancellationToken);
 
             if (result.Success)
             {

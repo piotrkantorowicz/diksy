@@ -7,12 +7,14 @@ using Diksy.WebApi.Models.Translation.Maps;
 using Microsoft.Extensions.Options;
 using TranslationInfoModel = Diksy.Translation.Models.TranslationInfo;
 using TranslationInfoDto = Diksy.WebApi.Models.Translation.TranslationInfo;
+using Diksy.Translation.History.Services;
 
 namespace Diksy.WebApi.Services
 {
     public class TranslationService(
         ITranslator translator,
         ILogger<TranslationService> logger,
+        ITranslationHistoryService translationHistoryService,
         IOptions<OpenAiOptions> openAiOptions) : ITranslationService
     {
         private readonly ILogger<TranslationService>
@@ -21,21 +23,26 @@ namespace Diksy.WebApi.Services
         private readonly IOptions<OpenAiOptions> _openAiOptions =
             openAiOptions ?? throw new ArgumentNullException(nameof(openAiOptions));
 
+        private readonly ITranslationHistoryService
+            _translationHistoryService = translationHistoryService ??
+                                         throw new ArgumentNullException(nameof(translationHistoryService));
+
         private readonly ITranslator _translator = translator ?? throw new ArgumentNullException(nameof(translator));
 
-        public async Task<TranslationResponse> TranslateAsync(string phrase, string? model, string? language,
-            CancellationToken cancellationToken)
+        public async Task<TranslationResponse> TranslateAsync(string phrase, string? model, string? sourceLanguage,
+            string? targetLanguage, CancellationToken cancellationToken)
         {
             try
             {
                 string defaultModel = model ?? _openAiOptions.Value.DefaultModel ?? AllowedModels.Gpt4O;
-                string defaultLanguage = language ?? AllowedLanguages.English;
+                string defaultLanguage = targetLanguage ?? AllowedLanguages.English;
 
                 _logger.LogInformation(message: "Translating phrase: {Phrase} to {Language} using model {Model}",
                     phrase, defaultLanguage, defaultModel);
 
                 TranslationInfoModel translationInfo =
-                    await _translator.TranslateAsync(phrase: phrase, model: defaultModel, language: defaultLanguage,
+                    await _translator.TranslateAsync(phrase: phrase, model: defaultModel,
+                        sourceLanguage: sourceLanguage, targetLanguage: defaultLanguage,
                         cancellationToken: cancellationToken);
 
                 TranslationInfoDto translationInfoDto = TranslationInfoMapper.MapFrom(translationInfo);
@@ -44,6 +51,9 @@ namespace Diksy.WebApi.Services
                     phrase, translationInfoDto.Translation);
 
                 SanitizeTranslationResponse(phrase: phrase, translation: translationInfoDto);
+
+                await _translationHistoryService.SaveTranslationAsync(translation: translationInfo,
+                    userId: string.Empty, cancellationToken: cancellationToken);
 
                 return TranslationResponse.SuccessResponse(translationInfoDto);
             }
@@ -80,6 +90,16 @@ namespace Diksy.WebApi.Services
             if (string.IsNullOrEmpty(translation.TranslationOfExample))
             {
                 throw new TranslationException("Translation of example is null or empty");
+            }
+
+            if (string.IsNullOrEmpty(translation.TargetLanguage))
+            {
+                throw new TranslationException("Target language is null or empty");
+            }
+
+            if (string.IsNullOrEmpty(translation.SourceLanguage))
+            {
+                throw new TranslationException("Source language is null or empty");
             }
         }
     }

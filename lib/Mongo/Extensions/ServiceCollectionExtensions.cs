@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Mongo.Database;
 using Mongo.Options;
 using Mongo.Repositories;
@@ -23,8 +24,10 @@ namespace Mongo.Extensions
             IConfiguration configuration,
             string sectionName = "MongoDb")
         {
-            services.Configure<MongoDbOptions>(configuration.GetSection(sectionName));
-            services.AddSingleton<MongoDbContext>();
+            IConfigurationSection mongoDbOptionsSection = configuration.GetSection(sectionName);
+
+            services.Configure<MongoDbOptions>(mongoDbOptionsSection);
+            services.AddScoped<MongoDbContext>();
 
             return services;
         }
@@ -34,17 +37,21 @@ namespace Mongo.Extensions
         /// </summary>
         /// <typeparam name="TDocument">The document type stored in the collection.</typeparam>
         /// <param name="services">The <see cref="IServiceCollection" /> to add the repository to.</param>
+        /// <param name="database">The name of the MongoDB database.</param>
         /// <param name="collectionName">The name of the MongoDB collection.</param>
         /// <returns>The same service collection so that multiple calls can be chained.</returns>
         public static IServiceCollection AddMongoRepository<TDocument>(
             this IServiceCollection services,
+            string database,
             string collectionName)
             where TDocument : class
         {
             services.AddScoped<IMongoRepository<TDocument>>(provider =>
             {
                 MongoDbContext context = provider.GetRequiredService<MongoDbContext>();
-                return new MongoRepository<TDocument>(context: context, collectionName: collectionName);
+                
+                return new MongoRepository<TDocument>(context: context, database: database,
+                    collectionName: collectionName);
             });
 
             return services;

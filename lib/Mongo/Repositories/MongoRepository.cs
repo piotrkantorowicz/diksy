@@ -14,13 +14,14 @@ namespace Mongo.Repositories
         ///     Initializes a new instance of the <see cref="MongoRepository{TDocument}" /> class.
         /// </summary>
         /// <param name="context">The MongoDB context.</param>
+        /// <param name="database">The name of the database.</param>
         /// <param name="collectionName">The name of the collection.</param>
-        public MongoRepository(MongoDbContext context, string collectionName)
+        public MongoRepository(MongoDbContext context, string database, string collectionName)
         {
             ArgumentNullException.ThrowIfNull(context);
             ArgumentNullException.ThrowIfNull(collectionName);
 
-            Collection = context.GetCollection<TDocument>(collectionName);
+            Collection = context.GetCollection<TDocument>(database, collectionName);
         }
 
         /// <summary>
@@ -30,16 +31,32 @@ namespace Mongo.Repositories
 
         /// <inheritdoc />
         public async Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter,
+            IDictionary<string, bool>? sortFields = null,
             CancellationToken cancellationToken = default)
         {
-            return await Collection.Find(filter).ToListAsync(cancellationToken);
+            IFindFluent<TDocument, TDocument>? findOperation = Collection.Find(filter);
+
+            if (sortFields is { Count: > 0 })
+            {
+                findOperation = ApplySorting(findOperation, sortFields);
+            }
+
+            return await findOperation.ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filter,
+            IDictionary<string, bool>? sortFields = null,
             CancellationToken cancellationToken = default)
         {
-            return await Collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+            IFindFluent<TDocument, TDocument>? findOperation = Collection.Find(filter);
+
+            if (sortFields is { Count: > 0 })
+            {
+                findOperation = ApplySorting(findOperation, sortFields);
+            }
+
+            return await findOperation.FirstOrDefaultAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -86,6 +103,27 @@ namespace Mongo.Repositories
             CancellationToken cancellationToken = default)
         {
             return await Collection.DeleteManyAsync(filter: filter, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Applies sorting to the find operation based on the provided sort fields.
+        /// </summary>
+        /// <param name="findOperation">The find operation to apply sorting to.</param>
+        /// <param name="sortFields">A dictionary where the key is the field name and the value indicates ascending (true) or descending (false) order.</param>
+        /// <returns>The find operation with sorting applied.</returns>
+        private static IFindFluent<TDocument, TDocument> ApplySorting(
+            IFindFluent<TDocument, TDocument> findOperation,
+            IDictionary<string, bool> sortFields)
+        {
+            SortDefinitionBuilder<TDocument>? sortBuilder = Builders<TDocument>.Sort;
+            List<SortDefinition<TDocument>> sortDefinitions = [];
+
+            sortDefinitions.AddRange(sortFields.Select(field => field.Value
+                ? sortBuilder.Ascending(field.Key)
+                : sortBuilder.Descending(field.Key)));
+
+            SortDefinition<TDocument>? combinedSortDefinition = sortBuilder.Combine(sortDefinitions);
+            return findOperation.Sort(combinedSortDefinition);
         }
     }
 }

@@ -21,13 +21,15 @@ namespace Diksy.WebApi.Models.Translation
         /// </summary>
         /// <param name="phrase">The phrase to translate (3-30 characters)</param>
         /// <param name="model">The AI model to use for translation. Defaults to GPT-4</param>
-        /// <param name="language">The target language for translation. Must be one of the supported languages</param>
+        /// <param name="targetLanguage">The target language for translation. Must be one of the supported languages</param>
+        /// <param name="sourceLanguage">The source language for translation. Must be one of the supported languages</param>
         public TranslationRequest(string phrase, string? model = AllowedModels.Gpt4O,
-            string? language = AllowedLanguages.English)
+            string? targetLanguage = AllowedLanguages.English, string? sourceLanguage = AllowedLanguages.Polish)
         {
             Phrase = phrase;
             Model = model;
-            Language = language;
+            TargetLanguage = targetLanguage;
+            SourceLanguage = sourceLanguage;
         }
 
         /// <summary>The phrase to translate (3-30 characters)</summary>
@@ -42,6 +44,11 @@ namespace Diksy.WebApi.Models.Translation
         /// <summary>The target language for translation. Must be one of the supported languages</summary>
         [RegularExpression(AllowedLanguages.LanguageRegex, ErrorMessage = "Invalid language")]
         [DefaultValue(AllowedLanguages.English)]
-        public string? Language { get; init; } = AllowedLanguages.English;
+        public string? TargetLanguage { get; init; } = AllowedLanguages.English;
+
+        /// <summary>The source language for translation. Must be one of the supported languages</summary>
+        [RegularExpression(AllowedLanguages.LanguageRegex, ErrorMessage = "Invalid language")]
+        [DefaultValue(AllowedLanguages.Polish)]
+        public string? SourceLanguage { get; init; } = AllowedLanguages.Polish;
     }
 }
