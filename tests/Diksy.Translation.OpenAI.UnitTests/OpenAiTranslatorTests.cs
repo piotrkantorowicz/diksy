@@ -32,7 +32,7 @@ namespace Diksy.Translation.OpenAI.UnitTests
         {
             // Arrange
             const string expectedJsonResponse =
-                "{\"phrase\":\"Hello\",\"translation\":\"Hola\",\"transcription\":\"həˈloʊ\",\"example\":\"Hola, ¿cómo estás?\", \"translationOfExample\":\"Hello, how are you?\"}";
+                "{\"phrase\":\"Hello\",\"translation\":\"Hola\",\"transcription\":\"həˈloʊ\",\"example\":\"Hola, ¿cómo estás?\", \"translationOfExample\":\"Hello, how are you?\", \"sourceLanguage\":\"English\",\"targetLanguage\":\"Spanish\"}";
 
             TranslationInfo? expectedTranslationInfo =
                 JsonSerializer.Deserialize<TranslationInfo>(expectedJsonResponse);
@@ -43,7 +43,7 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act
             TranslationInfo result = await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o",
-                language: "Spanish", cancellationToken: It.IsAny<CancellationToken>());
+                targetLanguage: "Spanish", sourceLanguage: AllowedLanguages.English, cancellationToken: It.IsAny<CancellationToken>());
 
             // Assert
             result.ShouldNotBeNull();
@@ -64,7 +64,8 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act & Assert
             await Should.ThrowAsync<TranslationException>(async () =>
-                await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o", language: "Spanish",
+                await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o", targetLanguage: "Spanish",
+                    sourceLanguage: AllowedLanguages.English,
                     cancellationToken: It.IsAny<CancellationToken>()));
         }
 
@@ -78,7 +79,8 @@ namespace Diksy.Translation.OpenAI.UnitTests
 
             // Act & Assert
             await Should.ThrowAsync<TranslationException>(async () =>
-                await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o", language: "Spanish",
+                await _translator.TranslateAsync(phrase: "Hello", model: "gpt-4o", targetLanguage: "Spanish",
+                    sourceLanguage: AllowedLanguages.English,
                     cancellationToken: It.IsAny<CancellationToken>()));
         }
     }

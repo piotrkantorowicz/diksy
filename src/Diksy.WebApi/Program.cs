@@ -1,5 +1,7 @@
 using Diksy.Translation.OpenAI.Extensions;
 using Diksy.WebApi.Extensions;
+using Diksy.Translation.History.Extensions;
+using Mongo.Extensions;
 using Microsoft.AspNetCore.RateLimiting;
 using NSwag;
 using System.Threading.RateLimiting;
@@ -32,6 +34,7 @@ builder.Services.AddRateLimiter(options =>
 });
 
 builder.Services.AddOpenAiTranslator(builder.Configuration);
+builder.Services.AddTranslationHistory(builder.Configuration);
 builder.Services.AddApiDependencies();
 
 WebApplication app = builder.Build();

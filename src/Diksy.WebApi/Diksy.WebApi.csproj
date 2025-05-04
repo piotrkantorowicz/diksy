@@ -6,13 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
-        <!--        <UserSecretsId>4ddcd890-ed7d-46b0-911f-fa3aa9970856</UserSecretsId>-->
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Diksy.Translation\Diksy.Translation.csproj"/>
         <ProjectReference Include="..\Diksy.Translation.OpenAI\Diksy.Translation.OpenAI.csproj"/>
+        <ProjectReference Include="..\Diksy.Translation.History\Diksy.Translation.History.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

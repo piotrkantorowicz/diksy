@@ -4,7 +4,7 @@ namespace Diksy.WebApi.Services
 {
     public interface ITranslationService
     {
-        Task<TranslationResponse> TranslateAsync(string phrase, string? model, string? language,
-            CancellationToken cancellationToken);
+        Task<TranslationResponse> TranslateAsync(string phrase, string? model, string? sourceLanguage,
+            string? targetLanguage, CancellationToken cancellationToken);
     }
 }

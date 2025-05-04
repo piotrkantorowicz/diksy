@@ -14,5 +14,9 @@ namespace Diksy.Translation.Models
 
         [JsonPropertyName("translationOfExample")]
         public required string TranslationOfExample { get; init; }
+
+        [JsonPropertyName("sourceLanguage")] public required string SourceLanguage { get; init; }
+
+        [JsonPropertyName("targetLanguage")] public required string TargetLanguage { get; init; }
     }
 }
