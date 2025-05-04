@@ -35,7 +35,8 @@ namespace Diksy.WebApi.Controllers
         ///     {
         ///     "phrase": "Hello world",
         ///     "model": "gpt-4o",
-        ///     "language": "Spanish"
+        ///     "sourceLanguage": "English",
+        ///     "targetLanguage": "Spanish"
         ///     }
         /// </remarks>
         /// <response code="200">Returns the translated text with pronunciation and example</response>
